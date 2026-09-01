@@ -1,0 +1,18 @@
+Package: gir1.2-nautilus-4.1
+Source: nautilus
+Version: 1:50.2.2-0ubuntu0.1+columns1
+Architecture: amd64
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Installed-Size: 31
+Depends: gir1.2-gio-2.0, gir1.2-glib-2.0, libnautilus-extension4 (>= 43~beta)
+Section: introspection
+Priority: optional
+Multi-Arch: same
+Homepage: https://wiki.gnome.org/action/show/Apps/Nautilus
+Description: libraries for nautilus components - gir bindings
+ Nautilus is the official file manager and graphical shell for the
+ GNOME desktop.
+ .
+ This package can be used by other packages using the GIRepository format to
+ generate dynamic bindings.
+Original-Maintainer: Debian GNOME Maintainers <pkg-gnome-maintainers@lists.alioth.debian.org>

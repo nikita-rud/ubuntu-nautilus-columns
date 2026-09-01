@@ -1,0 +1,1230 @@
+nautilus (1:50.2.2-0ubuntu0.1+columns1) resolute; urgency=medium
+
+  * Add a Miller columns view mode, as in the macOS Finder.
+
+ -- nrud <nickruddy707@gmail.com>  Mon, 01 Sep 2026 17:10:00 +0300
+
+nautilus (1:50.2.2-0ubuntu0.1) resolute; urgency=medium
+
+  * debian: Branch for ubuntu/resolute
+  * New upstream bugfix release (LP: #2160709).
+    - Restore default action in the "permanently delete" confirmation dialog
+      to the what it used to be in 25.10 and older (LP: #2160662).
+    - Fix fallback icons not changing size with zoom level (LP: #2146869).
+  * d/p: Drop patches applied upstream
+    - image-Fix-a-crash-on-empty-MIME-type.patch
+    - icon-info-Use-fallback-info-when-icon-type-is-unknown.patch
+    - icon-info-Handle-GEmblem-and-GEmblemedIcon-icons.patch
+    - hash-queue-Fix-head-removal.patch
+  * d/p/u/unity_launcher_support.patch: Fix crash when opening bookmarks
+    from the dock (LP: #2156984)
+  * d/p/u: Restore progress bar indicator in the shell.
+    We were showing the progress bar but never updating its progress.
+    (LP: #2062980)
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Thu, 16 Jul 2026 09:46:54 +0200
+
+nautilus (1:50.0-0ubuntu2) resolute; urgency=medium
+
+  * d/p: Fix crash when browsing SMB shares (LP: #2146652)
+  * d/p: Fix crash when viewing properties of encrypted disk (LP: #2147170)
+  * d/p: Fix crash when loading a folder with many icons
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Fri, 03 Apr 2026 17:09:38 +0200
+
+nautilus (1:50.0-0ubuntu1) resolute; urgency=medium
+
+  * Ubuntu Delta:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+      + Add missing Priority: optional field
+      + Replace tracker-test-utils with localsearch-test-utils, the
+        former is a transitional package which is missing the
+        localsearch3-test-sandbox command.
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+      + Do not request PackageKit support, no longer does anything
+      + Run tests with a wrapper to ensure gvfsd is running before
+        running the tests.
+    - debian/run-with-gvfsd:
+      + Wrapper to ensure gvfsd is running in the test Debhelper test
+        environment.
+    - debian/watch:
+      + Track alpha releases
+      + Upgrade to version 5
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+    - fallback-to-gexiv-0.14.2.patch:
+      + 0.16.0 is not in Debian yet due to requiring a
+        transition. Seems like reverting to 0.14.2 is pretty easy and
+        causes no obvious behaviour changes, so do that until the
+        transition is complete.
+    - test-Disable-file-operations-archive-test.patch:
+      + Dropped, upstream claims to have fixed it.
+      test-Disable-portal-file-chooser-test.patch:
+      + Disable flakey test.
+  * Refresh patches
+
+ -- Charles <charles05@canonical.com>  Mon, 16 Mar 2026 08:43:27 +0000
+
+nautilus (1:50~rc-0ubuntu1) resolute; urgency=medium
+
+  * Ubuntu Delta:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+      + Add missing Priority: optional field
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+      + Do not request PackageKit support, no longer does anything
+    - debian/watch:
+      + Track alpha releases
+      + Upgrade to version 5
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+    - fallback-to-gexiv-0.14.2.patch:
+      + 0.16.0 is not in Debian yet due to requiring a
+        transition. Seems like reverting to 0.14.2 is pretty easy and
+        causes no obvious behaviour changes, so do that until the
+        transition is complete.
+    - use-portable-format-macro.patch:
+      + Dropped, included in latest upstream release.
+    - test-Disable-file-operations-archive-test.patch,
+      test-Disable-portal-file-chooser-test.patch:
+      + Disable flakey tests.
+  * Refresh patches
+
+ -- Charles <charles05@canonical.com>  Tue, 03 Mar 2026 08:58:12 +0000
+
+nautilus (1:50~beta-0ubuntu1) resolute; urgency=medium
+
+  * Ubuntu Delta:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+      + Add missing Priority: optional field
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+      + Do not request PackageKit support, no longer does anything
+    - debian/watch:
+      + Track alpha releases
+      + Upgrade to version 5
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+    - fallback-to-gexiv-0.14.2.patch:
+      + 0.16.0 is not in Debian yet due to requiring a
+        transition. Seems like reverting to 0.14.2 is pretty easy and
+        causes no obvious behaviour changes, so do that until the
+        transition is complete.
+    - use-portable-format-macro.patch:
+      + Dropped, included in latest upstream release.
+    - test-Disable-file-operations-archive-test.patch:
+      + Disable a test that is flakey on the Ubuntu CI.
+  * Refresh patches
+  * Update dependency versions
+  * Fixes (LP: #2111560)
+
+ -- Charles <charles05@canonical.com>  Tue, 03 Feb 2026 11:11:08 +0000
+
+nautilus (1:50~alpha-0ubuntu2) resolute; urgency=medium
+
+  * Merge debian changes from 49.3-1. Remaining changes:
+    - New upstream release 50.alpha
+    - debian/control:
+      + Update dependencies for 50~alpha
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+      + Do not request PackageKit support, no longer does anything
+    - debian/watch:
+      + Track alpha releases
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+    - fallback-to-gexiv-0.14.2.patch:
+      + 0.16.0 is not in Debian yet due to requiring a
+        transition. Seems like reverting to 0.14.2 is pretty easy and
+        causes no obvious behaviour changes, so do that until the
+        transition is complete.
+    - use-portable-format-macro.patch:
+      + Fixes build failure on armhf
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Tue, 13 Jan 2026 12:10:52 +0100
+
+nautilus (49.3-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 07 Jan 2026 12:05:25 -0500
+
+nautilus (49.2-2) unstable; urgency=medium
+
+  * Remove direct Build-Depends: dbus (Closes: #1122682)
+  * Add Build-Depends: libxml2-utils for xmllint
+  * Bump Standards Version to 4.7.3
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 25 Dec 2025 20:37:54 -0500
+
+nautilus (49.2-1) unstable; urgency=medium
+
+  [ Jeremy Bícha ]
+  * New upstream release
+  * Remove direct Depends: bubblewrap (Closes: #1064259)
+  * Remove home patch: applied in new release
+
+  [ Alessandro Astone ]
+  * debian/control: Add build dependency on libicu
+  * debian/control: Bump tracker-sparql-3.0 minimum version
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Sun, 23 Nov 2025 19:52:36 -0500
+
+nautilus (1:50~alpha-0ubuntu1) resolute; urgency=medium
+  * Ubuntu Delta:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+      + Do not request PackageKit support, no longer does anything
+    - debian/watch:
+      + Track alpha releases
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+    - fallback-to-gexiv-0.14.2.patch:
+      + 0.16.0 is not in Debian yet due to requiring a
+        transition. Seems like reverting to 0.14.2 is pretty easy and
+        causes no obvious behaviour changes, so do that until the
+        transition is complete.
+    - use-portable-format-macro.patch:
+      + Fixes build failure on armhf
+  * Refresh patches
+  * Update dependency versions
+
+ -- Charles <charles05@canonical.com>  Fri, 09 Jan 2026 10:30:37 +0000
+
+nautilus (1:49.1-2ubuntu2) resolute; urgency=medium
+
+  * d/p/u/nautilus-sendto.patch: Restore support for sending folders:
+    nautilus-sendto can send folders to sandboxed mail clients since
+    version 3.8.6-8ubuntu1 in resolute (LP #2072569).
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Thu, 13 Nov 2025 18:16:37 +0100
+
+nautilus (1:49.1-2ubuntu1) resolute; urgency=medium
+
+  * Merge with debian. Remaining changes:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+    - debian/changelog: set epoch number (which was added by error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+    - Integrate with xdg-terminal-exec (LP: 2119117)
+      + Add files-view-Add-xdg-terminal-exec-action.patch:
+        Conditionally replace "Open in Console" with "Open in terminal"
+        that launches xdg-terminal-exec
+      + debian/rules: Toggle the meson config to enable xdg-terminal-exec
+      + debian/control: Replace the nautilus-extension-gnome-terminal package
+  * d/control: Drop icu and tracker Build-Depends delta with Debian
+  * d/p: Refresh Ubuntu patches
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Thu, 13 Nov 2025 12:49:39 +0100
+
+nautilus (49.1-2) unstable; urgency=medium
+
+  * Team upload
+  * d/p/file-utilities-Match-home-directory-with-existing-functio.patch:
+    Add patch from upstream fixing performance regression with GLib 2.86.1
+    when XDG_TEMPLATES_DIR in ~/.config/user-dirs.dirs was disabled by
+    setting it to "$HOME/" (Closes: #1118444, #1118564)
+
+ -- Simon McVittie <smcv@debian.org>  Mon, 27 Oct 2025 10:02:04 +0000
+
+nautilus (49.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * Revert build test timeout change: no longer needed and didn't work
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 15 Oct 2025 08:19:59 -0400
+
+nautilus (1:49.0-1ubuntu2) questing; urgency=medium
+
+  * More integrations with xdg-terminal-exec
+    - Restore context menu entry for the pathbar
+    - Restore Ctrl+. keyboard shortcut (LP: #2125884)
+  * d/p: Refresh patches
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Mon, 29 Sep 2025 11:19:15 +0200
+
+nautilus (1:49.0-1ubuntu1) questing; urgency=medium
+
+  [ Daniel van Vugt ]
+  * New upstream release 49.0 via Debian.
+  * Drop upstreamed patches:
+    - test-search-engine-Add-missing-headers.patch
+    - test-thumbnails-Skip-if-we-cannot-run-bwrap.patch
+  * Refresh Ubuntu patches:
+    - files-view-Add-xdg-terminal-exec-action.patch
+    - nautilus-sendto.patch
+    - unity_launcher_support.patch
+
+  [ Jeremy Bícha ]
+  * Revert "Double the build test timeout to help the slow riscv64 build"
+    because it was fixed upstream in 49.0
+
+ -- Daniel van Vugt <daniel.van.vugt@canonical.com>  Sun, 21 Sep 2025 17:54:02 +0800
+
+nautilus (49.0-1) unstable; urgency=medium
+
+  * New upstream release
+  * Remove 2 patches applied in new release
+  * Salsa CI: Stop disabling reprotest
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 15 Sep 2025 17:52:53 -0400
+
+nautilus (49~rc-3) unstable; urgency=medium
+
+  * Double the build test timeout to help the slow riscv64 build
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Tue, 09 Sep 2025 10:08:46 -0400
+
+nautilus (49~rc-2) unstable; urgency=medium
+
+  * Release to unstable
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 08 Sep 2025 10:27:30 -0400
+
+nautilus (49~rc-1) experimental; urgency=medium
+
+  [ Jeremy Bícha ]
+  * New upstream release
+  * Remove obsolete Rules-Requires-Root: no field
+
+  [ Simon McVittie ]
+  * d/control: Replace libgirepository1.0-dev B-D with gobject-introspection
+  * d/control: Use ${gir:Depends} for -dev package instead of hard-coding
+  * d/rules: Don't run dh_gnome.
+    We don't use any of its functionality. Continue to use dh-sequence-gnome,
+    which does nothing in Debian but has an effect in Ubuntu (it runs dh_scour
+    and dh_translations).
+  * Provide symlinks to make extension API reference more discoverable
+  * Register the API reference with doc-base
+  * d/control: Standards-Version: 4.7.2 (no changes required)
+
+  [ Daniel van Vugt ]
+  * Bump libglib2.0-dev requirement to 2.84.0 per upstream changes
+  * Bump extension version from 4.0 to 4.1
+
+  [ Alessandro Astone ]
+  * d/p: Fix localsearch test again
+  * d/p: Skip thumbnail tests in environments that can't unshare
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Fri, 05 Sep 2025 18:03:32 -0400
+
+nautilus (1:49~rc-0ubuntu1) questing; urgency=medium
+
+  * New upstream release
+  * d/p: Rebase patches
+  * d/p: Fix localsearch test again
+  * d/p: Skip thumbnail tests
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Thu, 04 Sep 2025 22:42:20 +0200
+
+nautilus (1:49~beta-0ubuntu3) questing; urgency=medium
+
+  * Capitalize Open in Terminal
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 27 Aug 2025 16:35:39 -0400
+
+nautilus (1:49~beta-0ubuntu2) questing; urgency=medium
+
+  * Bump the extension version from 4.0 to 4.1 per upstream changes in 49.beta
+
+ -- Daniel van Vugt <daniel.van.vugt@canonical.com>  Tue, 19 Aug 2025 17:30:27 +0800
+
+nautilus (1:49~beta-0ubuntu1) questing; urgency=medium
+
+  * New upstream version 49.beta
+  * debian/control: Bump libglib2.0-dev requirement to 2.84.0
+  * Drop upstreamed patch:
+    - test-Fix-localsearch-test-following-hits-added-signal-sig.patch
+  * Refresh Ubuntu patches and fix conflicts:
+    - files-view-Add-xdg-terminal-exec-action.patch
+    - nautilus-sendto.patch
+    - ubuntu_backspace_behaviour.patch
+    - unity_launcher_support.patch
+
+ -- Daniel van Vugt <daniel.van.vugt@canonical.com>  Tue, 19 Aug 2025 17:25:30 +0800
+
+nautilus (1:49~alpha-0ubuntu2) questing; urgency=medium
+
+  * debian: Integrate with xdg-terminal-exec (LP: #2119117)
+    - Add proposed patch to conditionally replace "Open in Console" with a
+      generic "Open in terminal" that launches xdg-terminal-exec
+    - Toggle the meson configuration option to enable that
+    - Replace the nautilus-extension-gnome-terminal package
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Wed, 30 Jul 2025 15:34:30 +0200
+
+nautilus (1:49~alpha-0ubuntu1) questing; urgency=medium
+
+  * Merge with debian. Remaining changes:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+  * New upstream release
+  * Refresh patches
+  * debian/control: Add build dependency on libicu
+  * debian/control: Bump tracker-sparql-3.0 minimum version
+  * debian/patches: Fix localsearch test
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Wed, 23 Jul 2025 14:56:37 +0200
+
+nautilus (48.3-2) unstable; urgency=medium
+
+  * Team upload
+  * Expand change details in previous changelog entry to provide more
+    information for the release team
+  * d/watch: Only watch versions 48.x until forky cycle opens
+  * d/gbp.conf: Use upstream/48.x branch until forky cycle opens
+  * Upload to unstable
+
+ -- Simon McVittie <smcv@debian.org>  Sun, 13 Jul 2025 17:28:19 +0100
+
+nautilus (48.3-1) experimental; urgency=medium
+
+  * New upstream bugfix release
+    - Fix a crash when entering the path bar (Ctrl+L) from a location with no
+      path (such as recent://)
+      (nautilus#3879 upstream)
+    - Support more video/audio types in search filter, for example Matroska
+      (nautilus#2452 upstream)
+    - When used to provide a file chooser in multiple-directory mode,
+      don't prevent the current directory from being selected
+      (nautilus!1758 upstream)
+    - Take focus correctly when programmatically opened via D-Bus, by
+      passing through the startup token, avoiding overzealous focus-stealing
+      prevention and the "<Window Name> is ready" notification
+      (nautilus#3385 upstream)
+    - Fix progress dialogs not getting closed as intended
+      (nautilus#3868 upstream)
+    - Prevent file chooser crash if attempting to open an empty location
+      via D-Bus
+      (nautilus#3862 upstream)
+    - Replace an icon that no longer exists in the current
+      adwaita-icon-theme with a similar icon that still exists and is
+      already relied on
+      (nautilus#3880 upstream)
+    - Fix a memory leak
+      (part of nautilus!1782 upstream)
+    - When running sandboxed, register our app ID with xdg-desktop-portal
+      so that it will let us inhibit logout during file operations
+      (nautilus#3874 upstream, not usually relevant in Debian)
+    - Translation updates
+  * Move gvfs-backends from Recommends to Depends to fix crash
+    (Closes: #1101157)
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 02 Jul 2025 10:24:17 -0400
+
+nautilus (48.2-3) unstable; urgency=medium
+
+  * Team upload
+  * Release to unstable (freeze exception: #1107571)
+
+ -- Simon McVittie <smcv@debian.org>  Wed, 11 Jun 2025 09:53:17 +0100
+
+nautilus (48.2-2) experimental; urgency=medium
+
+  * Team upload
+  * Summarize upstream changes in previous changelog entry
+  * d/p/debian/Revert-test-Disable-localsearch-tracker-tests.patch:
+    Re-enable localsearch/tracker test-case, disabled by upstream in 48.2.
+    This restores the test coverage that we had in 48.1.
+
+ -- Simon McVittie <smcv@debian.org>  Mon, 09 Jun 2025 23:19:50 +0100
+
+nautilus (48.2-1) experimental; urgency=medium
+
+  * New upstream release
+    - Fix a crash when an async query changes the visibility of the "Empty
+      Trash…" banner
+      (nautilus#3844 upstream)
+    - Fix a crash which can occur when moving between non-local locations,
+      or when double-clicking on a folder when using single-click navigation
+      (nautilus#3817 upstream)
+    - Speed up loading of SMB shares by not waiting for attributes to be ready
+      before loading directories
+      (nautilus#3834 upstream)
+    - Don't list FLAC in audio files' Properties as both a container and
+      a codec
+      (nautilus#3839 upstream)
+    - Disable localsearch (Tracker)-related build-time tests, which did not
+      work in the upstream CI
+      (see nautilus#3878 upstream)
+    - Translation updates
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Fri, 06 Jun 2025 14:44:20 -0400
+
+nautilus (48.1-2) unstable; urgency=medium
+
+  * Team upload
+  * Replace build-dep on obsolete appstream-util with appstream
+
+ -- Matthias Klumpp <mak@debian.org>  Sat, 03 May 2025 17:32:12 +0200
+
+nautilus (48.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * Remove remaining patch: no longer needed (Closes: #1050733)
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 17 Apr 2025 13:58:19 -0400
+
+nautilus (1:48.0-1ubuntu1) plucky; urgency=medium
+
+  * Merge with Debian. Remaining changes:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+  * Refresh patches
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Tue, 18 Mar 2025 17:58:19 +0100
+
+nautilus (48.0-1) unstable; urgency=medium
+
+  * Team upload
+
+  [ Alessandro Astone ]
+  * New upstream release
+
+  [ Jeremy Bícha ]
+  * Update Build-Depends: tracker → localsearch
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Tue, 18 Mar 2025 16:58:13 +0100
+
+nautilus (1:48~rc-2ubuntu1) plucky; urgency=medium
+
+  * Merge with Debian. Remaining changes:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+  * d/p/u/nautilus-sendto.patch: Handle missing mailto handler
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Tue, 11 Mar 2025 13:01:53 +0100
+
+nautilus (48~rc-2) unstable; urgency=medium
+
+  * New upstream release
+  * Bump minimum gtk4
+  * Restore Build-Depends: libtracker-sparql-3.0-dev
+  * Set HOME for new build test
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 06 Mar 2025 16:14:49 -0500
+
+nautilus (1:48~beta-2ubuntu1) plucky; urgency=medium
+
+  * Merge with Debian. Remaining changes:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 20 Feb 2025 07:01:13 -0500
+
+nautilus (48~beta-2) unstable; urgency=medium
+
+  * Remove tracker revert patch
+  * Update Depends to localsearch/tinysparql
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 20 Feb 2025 06:59:16 -0500
+
+nautilus (1:48~beta-1ubuntu1) plucky; urgency=medium
+
+  * Merge with Debian. Remaining changes:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+  * Rebase patches
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Wed, 19 Feb 2025 09:59:12 +0100
+
+nautilus (48~beta-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump minimum GTK4
+  * Run wrap-and-sort
+  * Stop installing tracker domain ontology: no longer provided or needed
+  * Remove Suggests: totem, evince
+  * Remove ancient Breaks/Replaces
+  * Remove plugin crash patch: applied in new release
+  * Update localsearch revert patch
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 12 Feb 2025 16:12:36 -0500
+
+nautilus (47.1-2) unstable; urgency=medium
+
+  [ Philipp Unger ]
+  * Add patch to fix plugin crash
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 16 Jan 2025 13:02:53 -0500
+
+nautilus (1:47.1-1ubuntu1) plucky; urgency=medium
+
+  * Merge with Debian. Remaining changes:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 09 Dec 2024 10:57:54 -0500
+
+nautilus (47.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * Remove 3 patches applied in new release
+  * Remove a localsearch revert patch that is no longer needed
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 09 Dec 2024 10:55:19 -0500
+
+nautilus (1:47.0-3ubuntu1) plucky; urgency=medium
+
+  * Merge with Debian. Remaining changes:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Fri, 06 Dec 2024 16:46:23 -0500
+
+nautilus (47.0-3) unstable; urgency=medium
+
+  [ Jeremy Bícha ]
+  * Cherry-pick 3 patches from the gnome-47 branch
+  * debian/salsa-ci.yml: update for latest recommendation
+
+  [ Zhian Chen ]
+  * Add Depends: xdg-user-dirs-gtk (Closes: #1082427)
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Fri, 06 Dec 2024 16:43:46 -0500
+
+nautilus (47.0-2) unstable; urgency=medium
+
+  * Remove obsolete Suggests: eog, nautilus-extension-brasero (Closes: #1085303)
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 28 Oct 2024 17:22:53 +0100
+
+nautilus (1:47.0-1ubuntu1) oracular; urgency=medium
+
+  * Merge with Debian. Remaining changes:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+
+ -- Alessandro Astone <alessandro.astone@canonical.com>  Mon, 16 Sep 2024 14:32:33 +0200
+
+nautilus (47.0-1) unstable; urgency=medium
+
+  [ Alessandro Astone ]
+  * New upstream release
+    - Fix filechooser crash when searching (LP: #2078721)
+
+  [ Jeremy Bícha ]
+  * Set ${gir:Provides} for libnautilus-extension-dev
+  * Release to unstable
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 16 Sep 2024 06:50:41 -0400
+
+nautilus (1:47~beta.1-1ubuntu1) oracular; urgency=medium
+
+  [ Jeremy Bícha ]
+  * Merge with Debian. Remaining changes:
+    - debian/control:
+      + Add Build-Depends: libunity-dev
+      + Add Recommends: xdg-desktop-portal-gnome:
+        Required for "Set as Background" feature
+      + Suggest instead of Recommend gnome-sushi
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+    - Add appstream-compulsory.patch:
+      - Mark Nautilus as required for GNOME (affects the GNOME Software app)
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - nautilus-sendto.patch:
+      + Restore nautilus-sendto integration for better Thunderbird integration
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+  * Refresh patches
+
+  [ Nathan Pratta Teodosio ]
+  * d/p/u/nautilus-sendto.patch extended:
+   If {nautilus_sendto installed && mailer is a snap && folder in selection},
+   do not present 'Email' option, as Nautilus then compresses the selected
+   files to a zip, which it creates in /tmp, to which a snap doesn't have
+   access (LP: #2072569).
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Tue, 13 Aug 2024 10:30:32 -0400
+
+nautilus (47~beta.1-1) experimental; urgency=medium
+
+  * New upstream release
+    - Support being used as xdg-desktop-portal-gnome filechooser
+      (LP: #1175608, LP: #2023044)
+  * Bump minimum GTK4, libadwaita & libportal
+  * Remove reproducibility patch: applied in new release
+  * Add revert patches to avoid switch from tracker to localsearch for now
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Tue, 13 Aug 2024 09:37:19 -0400
+
+nautilus (46.2-3) unstable; urgency=medium
+
+  * Bump minimum GTK4 to 4.13.6
+  * Remove patches that reverted changes that required GTK4 4.13.6
+  * Bump Standards-Version to 4.7.0
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 01 Aug 2024 16:14:10 -0400
+
+nautilus (46.2-2) unstable; urgency=medium
+
+  * Cherry-pick reproducible builds fix (Closes: #1076368)
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Sat, 20 Jul 2024 17:58:21 -0600
+
+nautilus (46.2-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump minimum glib, gtk4, libadwaita, libgexiv2
+  * Revert 2 commits that require gtk4 4.13
+  * Drop obsolete Build-Depends: libgtk-3-common
+  * Drop obsolete Build-Depends: libxml2-dev
+  * Drop meson fatal warnings patch: obsolete
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Sun, 14 Jul 2024 08:20:53 -0400
+
+nautilus (1:46.2-0ubuntu2) oracular; urgency=medium
+
+  * d/p/u/nautilus-sendto.patch: If nautilus-sendto is installed, then use
+    it when clicking 'Email' in the file context menu, else do the default
+    upstream action, namely to use the XDG portal. (lp: #1996927)
+
+ -- Nathan Pratta Teodosio <nathan.teodosio@canonical.com>  Thu, 27 Jun 2024 13:59:36 +0200
+
+nautilus (1:46.2-0ubuntu1) oracular; urgency=medium
+
+  * New upstream release (lp: #2067592)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 30 May 2024 12:05:31 +0200
+
+nautilus (1:46.1-0ubuntu2) oracular; urgency=medium
+
+  * Upload to the new Ubuntu serie
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Fri, 03 May 2024 11:38:08 +0200
+
+nautilus (1:46.1-0ubuntu1) noble; urgency=medium
+
+  * New upstream stable bugfix release (lp: #2064643)
+
+ -- Sebastien Bacher <seb128@ubuntu.com>  Thu, 02 May 2024 17:08:57 +0200
+
+nautilus (1:46.0-0ubuntu1) noble; urgency=medium
+
+  * New upstream release
+  * Bump minimum GTK4 to 4.13.6
+  * Drop 2 patches that reverted GTK4 version bump
+  * Drop obsolete Build-Depends: libgtk-3-common
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 20 Mar 2024 07:57:49 -0400
+
+nautilus (1:46~rc-0ubuntu1) noble; urgency=medium
+
+  * New upstream release
+  * Drop 2 patches applied in new release
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 07 Mar 2024 09:11:58 -0500
+
+nautilus (1:46~beta-0ubuntu3) noble; urgency=medium
+
+  * Add another patch to fix 32-bit build (LP: #2054109)
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Fri, 23 Feb 2024 08:57:34 -0500
+
+nautilus (1:46~beta-0ubuntu2) noble; urgency=medium
+
+  * Cherry-pick patch to fix 32-bit build (LP: #2054109)
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 22 Feb 2024 19:06:36 -0500
+
+nautilus (1:46~beta-0ubuntu1) noble; urgency=medium
+
+  * New upstream release
+  * Drop meson fatal warnings patch: obsolete
+  * Bump minimum glib, gtk4, libadwaita, libgexiv2
+  * Revert 2 commits that require gtk4 4.13
+  * Drop obsolete Build-Depends: libxml2-dev
+  * Refresh patches
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Fri, 16 Feb 2024 09:18:17 -0500
+
+nautilus (1:45.2.1-4ubuntu1) noble; urgency=medium
+
+  * Resynchronize with Debian. Remaining Ubuntu changes:
+    - debian/control.in:
+      + Build-Depend on libunity-dev
+      + lower gnome-sushi Recommends to a Suggests
+      + Depend on xdg-desktop-portal-gnome | xdg-desktop-portal-backend.
+        Required for "Set as Background" feature
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+
+ -- Nathan Pratta Teodosio <nathan.teodosio@canonical.com>  Mon, 29 Jan 2024 09:29:21 +0100
+
+nautilus (45.2.1-4) unstable; urgency=medium
+
+  * Team upload
+
+  [ Helmut Grohne ]
+  * Fix FTBFS when nocheck build option is specified (Closes: #1061466)
+
+  [ Jeremy Bícha ]
+  * salsa-ci: Disable reprotest
+
+ -- Simon McVittie <smcv@debian.org>  Fri, 26 Jan 2024 15:14:00 +0000
+
+nautilus (45.2.1-3) unstable; urgency=medium
+
+  * Update tracker test patch to really skip the test failure
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 11 Jan 2024 20:39:25 -0500
+
+nautilus (45.2.1-2) unstable; urgency=medium
+
+  * Print more logs to get more debugging information for #1050733
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 11 Jan 2024 19:07:37 -0500
+
+nautilus (45.2.1-1) unstable; urgency=medium
+
+  * New upstream release (LP: #2048892)
+  * Stop using debian/control.in and dh_gnome_clean
+  * Add patch to mark tracker build test as failing (Mitigates #1050733)
+  * Drop recent changes to debian/rules related to the tracker test issue
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 11 Jan 2024 16:47:47 -0500
+
+nautilus (45.1-1) unstable; urgency=medium
+
+  * New upstream release
+  * Bump gexiv2 depency to 0.14.2
+
+ -- Nathan Pratta Teodosio <nathan.teodosio@canonical.com>  Tue, 24 Oct 2023 09:35:42 +0200
+
+nautilus (45.0-2) unstable; urgency=medium
+
+  * Set XDG_RUNTIME_DIR to try to fix the tracker build test
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 27 Sep 2023 09:59:49 -0400
+
+nautilus (45.0-1) unstable; urgency=medium
+
+  * New upstream translations release
+  * debian/rules Set $HOME and unset some related env variables
+    to hopefully fix the tracker build test (Closes: #1050733)
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Wed, 27 Sep 2023 08:42:57 -0400
+
+nautilus (45~rc-1) unstable; urgency=medium
+
+  * New upstream release
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Tue, 05 Sep 2023 11:14:22 -0400
+
+nautilus (1:45~beta2-1ubuntu1) mantic; urgency=medium
+
+  * Resynchronize with Debian. Remaining Ubuntu changes:
+    - debian/control.in:
+      + Build-Depend on libunity-dev
+      + lower gnome-sushi Recommends to a Suggests
+      + Depend on xdg-desktop-portal-gnome | xdg-desktop-portal-backend.
+        Required for "Set as Background" feature
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+  * Drop Revert-sidebar patch: no longer needed
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 28 Aug 2023 07:29:16 -0400
+
+nautilus (45~beta2-1) unstable; urgency=medium
+
+  * New upstream release
+  * release to unstable
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Mon, 28 Aug 2023 07:26:46 -0400
+
+nautilus (1:45~beta-1ubuntu1) mantic; urgency=medium
+
+  * Refreshed Revert-sidebar patch, which has been almost entirely upstreamed.
+  * Rewrote a part of unity_launcher_support.patch, as part of EEL has been
+    replaced with the GLib API.
+  * Resynchronize with Debian (LP: #2023417), remaining Ubuntu changes:
+    - debian/control.in:
+      + Build-Depend on libunity-dev
+      + lower gnome-sushi Recommends to a Suggests
+      + Depend on xdg-desktop-portal-gnome | xdg-desktop-portal-backend.
+        Required for "Set as Background" feature
+    - debian/changelog, debian/rules: set epoch number (which was added by
+      error)
+    - debian/source_nautilus.py:
+      + Apport hook to list versions of files in /usr/lib/nautilus and
+        reassign the crashes when they are not due to nautilus code directly
+    - debian/rules:
+      + Build Unity support
+    - 04_suppress_umount_in_ltsp.patch:
+      + Don't list unmount and eject actions on LTSP clients
+    - ubuntu_backspace_behaviour.patch:
+      + restore backspace behaviour to go back
+    - Revert-sidebar*.patch:
+      + Revert commit that requires libcloudproviders because it's not in
+        Ubuntu main
+    - unity_launcher_support.patch:
+      + unity launcher integration (list bookmarks in the context menu,
+        display a bar on the icon during copies)
+    - unity_icon_color.patch:
+      + specify a background color for the unity launcher icon
+
+ -- Nathan Pratta Teodosio <nathan.teodosio@canonical.com>  Thu, 17 Aug 2023 10:19:54 +0200
+
+nautilus (45~beta-1) experimental; urgency=medium
+
+  * New upstream release
+  * debian/control.in: Bump minimum glib, GTK4, and libadwaita
+  * Don't enable libcloudproviders on Ubuntu
+  * Drop 4 patches applied in new release
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Fri, 11 Aug 2023 06:48:24 -0400
+
+nautilus (44.2.1-2) unstable; urgency=medium
+
+  * Release to unstable
+
+ -- Jeremy Bícha <jbicha@ubuntu.com>  Thu, 20 Jul 2023 13:23:37 -0400
+
+# Older entries have been removed from this changelog.
+# To read the complete changelog use `apt changelog libnautilus-extension-dev`.

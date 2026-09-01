@@ -1,0 +1,122 @@
+name: build
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Собрать пакеты
+    runs-on: ubuntu-latest
+    container: ubuntu:26.04
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      tag: ${{ steps.version.outputs.tag }}
+    steps:
+      - name: Базовые инструменты
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            git ca-certificates dpkg-dev rsync
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Доверять каталогу
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Зависимости сборки
+        run: |
+          cat > /etc/apt/sources.list.d/ubuntu-src.sources <<'EOF'
+          Types: deb-src
+          URIs: http://archive.ubuntu.com/ubuntu/
+          Suites: resolute resolute-updates
+          Components: main restricted universe multiverse
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          EOF
+          apt-get update
+          apt-get build-dep -y nautilus
+          apt-get install -y meson ninja-build
+
+      - name: Версия форка
+        id: version
+        run: |
+          v=$(./tools/set-fork-version.sh)
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          echo "tag=v${v#*:}" >> "$GITHUB_OUTPUT"
+          echo "Собираем $v"
+
+      - name: Сборка
+        run: DEB_BUILD_OPTIONS=nocheck dpkg-buildpackage -b -uc -us
+
+      - name: Собрать пакеты в одно место
+        run: mkdir -p debs && cp ../*.deb debs/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: debs
+          path: debs/*.deb
+
+  publish:
+    name: Опубликовать
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: debs
+          path: debs
+
+      - name: Инструменты
+        run: sudo apt-get update && sudo apt-get install -y apt-utils
+
+      - name: Версия в changelog
+        run: ./tools/set-fork-version.sh
+
+      - name: Собрать apt-репозиторий
+        env:
+          APT_GPG_PRIVATE_KEY: ${{ secrets.APT_GPG_PRIVATE_KEY }}
+        run: ./tools/build-apt-repo.sh debs
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+      - id: pages
+        uses: actions/deploy-pages@v4
+
+      - name: Релиз
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.build.outputs.tag }}
+          VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" debs/*.deb --clobber
+          else
+            gh release create "$TAG" debs/*.deb \
+              --title "Колоночный режим — ${VERSION}" \
+              --notes "Автоматическая сборка из \`${GITHUB_SHA::7}\`.
+
+          Установка и подключение репозитория — https://nikita-rud.github.io/ubuntu-nautilus-columns"
+          fi

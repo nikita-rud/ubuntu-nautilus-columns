@@ -1,0 +1,15 @@
+5c46f077f6cedda0f5c3bb4e5698d608  usr/bin/nautilus
+ebe6b749fcf0e72fb88b69d472ef472f  usr/bin/nautilus-autorun-software
+5d4641fd3124e38852429865d4696d3c  usr/lib/x86_64-linux-gnu/nautilus/extensions-4/libnautilus-image-properties.so
+0ac497190a81a51b444d634320756283  usr/lib/x86_64-linux-gnu/nautilus/extensions-4/libtotem-properties-page.so
+09fdf3d74ead38a82572c8a79cead475  usr/share/applications/nautilus-autorun-software.desktop
+1a0fb5920ef3610e1e262509fc792296  usr/share/applications/org.gnome.Nautilus.desktop
+565bec6fdb5cfc236352f6d2449d9af8  usr/share/apport/package-hooks/source_nautilus.py
+fc9deda511cc9d65a001c7b9bcaf28aa  usr/share/dbus-1/services/org.freedesktop.FileManager1.service
+86f8018e1389cbe818abca2130340418  usr/share/dbus-1/services/org.gnome.Nautilus.service
+649a87876760511b5c16d059dce6be8a  usr/share/doc/nautilus/NEWS.gz
+9afe2668725f8a00044dd32d56e6574a  usr/share/doc/nautilus/changelog.Debian.gz
+acf2930beb90719645987e76502ac5ab  usr/share/doc/nautilus/copyright
+0e12ca7dba51938f053838af0ae90906  usr/share/man/man1/nautilus-autorun-software.1.gz
+297b4726310263549546614ee0594ff0  usr/share/man/man1/nautilus.1.gz
+19b85a18c594aea5cbbcc5793a627719  usr/share/metainfo/org.gnome.Nautilus.metainfo.xml

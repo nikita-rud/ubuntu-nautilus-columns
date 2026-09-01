@@ -1,0 +1,5 @@
+debian/tmp/usr/include
+debian/tmp/usr/lib/x86_64-linux-gnu/libnautilus-extension.so
+debian/tmp/usr/lib/x86_64-linux-gnu/pkgconfig
+debian/tmp/usr/share/doc/nautilus
+debian/tmp/usr/share/gir-1.0/Nautilus-4.1.gir

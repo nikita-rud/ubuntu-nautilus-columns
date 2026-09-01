@@ -23,7 +23,46 @@
 * «Создать папку» и вставка действуют на каталог активной колонки,
   а не на корневой.
 
-## Сборка и установка
+## Установка
+
+### Через apt (рекомендуется)
+
+Подключается один раз, дальше обновления приезжают обычным `apt upgrade`:
+
+```
+sudo install -d /etc/apt/keyrings
+curl -fsSL https://nikita-rud.github.io/ubuntu-nautilus-columns/KEY.asc \
+  | sudo tee /etc/apt/keyrings/nautilus-columns.asc > /dev/null
+
+echo "deb [signed-by=/etc/apt/keyrings/nautilus-columns.asc] \
+https://nikita-rud.github.io/ubuntu-nautilus-columns stable main" \
+  | sudo tee /etc/apt/sources.list.d/nautilus-columns.list
+
+sudo apt update
+sudo apt install nautilus nautilus-data
+gsettings set org.gnome.nautilus.preferences default-folder-viewer columns-view
+```
+
+Отключить и вернуть штатный Nautilus:
+
+```
+sudo rm /etc/apt/sources.list.d/nautilus-columns.list \
+        /etc/apt/keyrings/nautilus-columns.asc
+sudo apt update
+sudo apt install --reinstall --allow-downgrades \
+  nautilus nautilus-data libnautilus-extension4
+```
+
+Только для Ubuntu 26.04, amd64. На других выпусках — сборка из исходников.
+
+### Готовые пакеты одним файлом
+
+Лежат в [Releases](https://github.com/nikita-rud/ubuntu-nautilus-columns/releases),
+если не хочется подключать репозиторий. Тогда обновления придётся ставить
+руками, а `sudo apt-mark hold nautilus nautilus-data libnautilus-extension4`
+не даст системе вернуть официальную версию.
+
+## Сборка из исходников
 
 Один раз — зависимости:
 
@@ -58,8 +97,31 @@ ninja -C builddir
 `GtkFilterListModel` по строкам, чей родитель — выбранная строка
 колонки N.
 
-История начинается с коммита `ef42a7a` — нетронутый исходник Ubuntu
-со всеми её патчами. Всё, что после, — это изменения форка.
+Ветка `ubuntu` держит нетронутые деревья исходников Ubuntu, по коммиту на
+версию. Ветка `main` — те же деревья плюс наши изменения. Поэтому переход на
+новую версию Nautilus сводится к `git rebase --onto`, а конфликты сразу видны
+построчно.
+
+Версия пакета в `debian/changelog` не хранится в репозитории, а дописывается
+при сборке (`tools/set-fork-version.sh`): Ubuntu добавляет свою запись ровно
+в то же место файла, так что коммит с ней конфликтовал бы при каждом переносе.
+Номер нашей ревизии поверх базы Ubuntu лежит в `FORK_REVISION` — увеличьте его,
+если меняете код форка, не меняя версию Ubuntu.
+
+## Автоматика
+
+`.github/workflows/watch-upstream.yml` раз в неделю проверяет, не вышла ли
+новая версия nautilus в Ubuntu. Если вышла — переносит наши коммиты на неё
+(`tools/rebase-onto-ubuntu.sh`), собирает и публикует. Если перенос
+конфликтует — заводит issue, дальше нужен человек.
+
+Ждать этого стоит: наши изменения не просто добавляют файлы, они встраиваются
+в чужой код — `nautilus-list-base.c`, `nautilus-files-view.c`,
+`nautilus-window-slot.c`. Точечные обновления переносятся чисто почти всегда,
+смена крупной версии GNOME — почти наверняка потребует рук.
+
+`.github/workflows/build.yml` собирает пакеты, обновляет apt-репозиторий на
+GitHub Pages и выкладывает релиз.
 
 ## Лицензия
 

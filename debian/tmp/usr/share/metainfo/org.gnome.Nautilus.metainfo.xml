@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.gnome.Nautilus</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <name>Files</name>
+  <name xml:lang="zh-Hant-TW">檔案</name>
+  <name xml:lang="zh-Hant-HK">檔案</name>
+  <name xml:lang="zh-Hans-CN">文件</name>
+  <name xml:lang="vi">Tập tin</name>
+  <name xml:lang="uz-Latn">Fayllar</name>
+  <name xml:lang="uk">Файли</name>
+  <name xml:lang="ug">ھۆججەت</name>
+  <name xml:lang="tr">Dosyalar</name>
+  <name xml:lang="th">ไฟล์</name>
+  <name xml:lang="tg">Файлҳо</name>
+  <name xml:lang="te">దస్త్రాలు</name>
+  <name xml:lang="ta">கோப்புகள்</name>
+  <name xml:lang="sv">Filer</name>
+  <name xml:lang="sr-Latn">Datoteke</name>
+  <name xml:lang="sr-Cyrl">Датотеке</name>
+  <name xml:lang="sl">Datoteke</name>
+  <name xml:lang="sk">Súbory</name>
+  <name xml:lang="ru">Файлы</name>
+  <name xml:lang="ro">Fișiere</name>
+  <name xml:lang="pt-BR">Arquivos</name>
+  <name xml:lang="pt">Ficheiros</name>
+  <name xml:lang="pl">Pliki</name>
+  <name xml:lang="pa">ਫ਼ਾਇਲਾਂ</name>
+  <name xml:lang="or">ଫାଇଲଗୁଡିକ</name>
+  <name xml:lang="oc">Fichièrs</name>
+  <name xml:lang="nn">Filer</name>
+  <name xml:lang="nl">Bestanden</name>
+  <name xml:lang="ne">फाइलहरू</name>
+  <name xml:lang="nb">Filer</name>
+  <name xml:lang="my">ဖိုင်</name>
+  <name xml:lang="ms">Fail</name>
+  <name xml:lang="mr">फाइल्स्</name>
+  <name xml:lang="ml">ഫയലുകള്‍</name>
+  <name xml:lang="mk">Датотеки</name>
+  <name xml:lang="mjw">Files</name>
+  <name xml:lang="lv">Datnes</name>
+  <name xml:lang="lt">Failai</name>
+  <name xml:lang="lo">ໄຟລ໌</name>
+  <name xml:lang="ln">Ba Fisyé</name>
+  <name xml:lang="ky">Файлдар</name>
+  <name xml:lang="ko">파일</name>
+  <name xml:lang="kn">ಕಡತಗಳು</name>
+  <name xml:lang="kk-Cyrl">Файлдар</name>
+  <name xml:lang="kab">Ifuyla</name>
+  <name xml:lang="ka">ფაილები</name>
+  <name xml:lang="ja">ファイル</name>
+  <name xml:lang="it">File</name>
+  <name xml:lang="is">Skrár</name>
+  <name xml:lang="ie">Files</name>
+  <name xml:lang="id">Berkas</name>
+  <name xml:lang="ia">Files</name>
+  <name xml:lang="hu">Fájlok</name>
+  <name xml:lang="hr">Datoteke</name>
+  <name xml:lang="hi">फाइल्स</name>
+  <name xml:lang="he">קבצים</name>
+  <name xml:lang="gu">ફાઇલો</name>
+  <name xml:lang="gl">Ficheiros</name>
+  <name xml:lang="gd">Faidhlichean</name>
+  <name xml:lang="ga">Comhaid</name>
+  <name xml:lang="fur">Files</name>
+  <name xml:lang="fr">Fichiers</name>
+  <name xml:lang="fo">Fílur</name>
+  <name xml:lang="fi">Tiedostot</name>
+  <name xml:lang="fa">پرونده‌ها</name>
+  <name xml:lang="eu">Fitxategiak</name>
+  <name xml:lang="et">Failid</name>
+  <name xml:lang="es">Archivos</name>
+  <name xml:lang="eo">Dosieroj</name>
+  <name xml:lang="en-GB">Files</name>
+  <name xml:lang="en-CA">Files</name>
+  <name xml:lang="el">Αρχεία</name>
+  <name xml:lang="de">Dateien</name>
+  <name xml:lang="da">Filer</name>
+  <name xml:lang="cs">Soubory</name>
+  <name xml:lang="crh">Dosyeler</name>
+  <name xml:lang="ckb">پەڕگەکان</name>
+  <name xml:lang="ca-valencia">Fitxers</name>
+  <name xml:lang="ca">Fitxers</name>
+  <name xml:lang="bs-Latn">Datoteke</name>
+  <name xml:lang="bn-IN">ফাইল</name>
+  <name xml:lang="bn">ফাইল</name>
+  <name xml:lang="bg">Файлове</name>
+  <name xml:lang="be-Cyrl">Файлы</name>
+  <name xml:lang="ast">Ficheros</name>
+  <name xml:lang="as">ফাইলসমূহ</name>
+  <name xml:lang="ar">الملفات</name>
+  <name xml:lang="an">Fichers</name>
+  <name xml:lang="af">Lêers</name>
+  <summary>Access and organize files</summary>
+  <summary xml:lang="zh-Hant-TW">存取與管理檔案</summary>
+  <summary xml:lang="zh-Hant-HK">存取與組織檔案</summary>
+  <summary xml:lang="zh-Hans-CN">访问和组织文件</summary>
+  <summary xml:lang="vi">Truy cập và tổ chức tập tin</summary>
+  <summary xml:lang="uz-Latn">Fayllarga kirish va tartibga solish</summary>
+  <summary xml:lang="uk">Доступ до файлів</summary>
+  <summary xml:lang="ug">ھۆججەتلەرنى تەشكىللەش ۋە زىيارەت</summary>
+  <summary xml:lang="tr">Dosyalara eriş ve düzenle</summary>
+  <summary xml:lang="th">เข้าถึงและจัดระเบียบไฟล์</summary>
+  <summary xml:lang="tg">Кушодан ва мураттабсозии файлҳо</summary>
+  <summary xml:lang="te">దస్త్రాలను నిర్వహించండి మరియు ప్రాప్తించండి</summary>
+  <summary xml:lang="ta">கோப்புகளை அணுகு மற்றும் ஒழுங்கு படுத்து</summary>
+  <summary xml:lang="sv">Kom åt och organisera filer</summary>
+  <summary xml:lang="sr-Latn">Pristupite datotekama i organizujte ih</summary>
+  <summary xml:lang="sr-Cyrl">Приступите датотекама и организујте их</summary>
+  <summary xml:lang="sl">Dostop in razvrščanje datotek</summary>
+  <summary xml:lang="sk">Pristupuje k súborom a organizuje ich</summary>
+  <summary xml:lang="ru">Управление файлами</summary>
+  <summary xml:lang="ro">Accesează și organizează fișiere</summary>
+  <summary xml:lang="pt-BR">Acesse e organize arquivos</summary>
+  <summary xml:lang="pt">Aceder e organizar ficheiros</summary>
+  <summary xml:lang="pl">Otwieranie i organizowanie plików</summary>
+  <summary xml:lang="pa">ਫ਼ਾਇਲਾਂ ਲਈ ਪਹੁੰਚ ਅਤੇ ਇੰਤਜ਼ਾਮ</summary>
+  <summary xml:lang="or">ଫାଇଲମାନଙ୍କୁ ଅଭିଗମ କରନ୍ତୁ ଏବଂ ସଙ୍ଗଠନ କରନ୍ତୁ</summary>
+  <summary xml:lang="oc">Accedir als fichièrs e los organizar</summary>
+  <summary xml:lang="nn">Aksesser og organiser filer</summary>
+  <summary xml:lang="nl">Gebruik en organiseer bestanden</summary>
+  <summary xml:lang="ne">फाइलहरूको पहुँच र संगठन</summary>
+  <summary xml:lang="nb">Finn og organiser filer</summary>
+  <summary xml:lang="my">ဖိုင်များစီမံရန်</summary>
+  <summary xml:lang="ms">Capai dan urus fail</summary>
+  <summary xml:lang="mr">फाइल्स्ला प्रवेश द्वया व संघटित करा</summary>
+  <summary xml:lang="ml">ഫയലുകള്‍ ലഭ്യമാക്കി ക്രമത്തിലാക്കുക</summary>
+  <summary xml:lang="mk">Пристапувајте и организирајте датотеки</summary>
+  <summary xml:lang="lv">Piekļūt un organizēt datnes</summary>
+  <summary xml:lang="lt">Atverti ir tvarkyti failus</summary>
+  <summary xml:lang="lo">ເຂົ້າເຖິງ ແລະ ຈັດລະບຽບໄຟລ໌</summary>
+  <summary xml:lang="ln">Koyíngela mpe kobɔngisa ya kásá</summary>
+  <summary xml:lang="ko">파일 조작 및 정리</summary>
+  <summary xml:lang="kn">ಕಡತಗಳನ್ನು ನಿಲುಕಿಸಿಕೊಳ್ಳಿ ಹಾಗು ವ್ಯವಸ್ಥಿತವಾಗಿ ಜೋಡಿಸಿ</summary>
+  <summary xml:lang="kk-Cyrl">Файлдарға қол жеткізу және оларды реттеу</summary>
+  <summary xml:lang="kab">Kcem udiɣ suddes ifuyla</summary>
+  <summary xml:lang="ka">ფაილებზე წვდომა და დალაგება</summary>
+  <summary xml:lang="ja">ファイルにアクセスして整理</summary>
+  <summary xml:lang="it">Accede ai file e li organizza</summary>
+  <summary xml:lang="is">Aðgangur og skipulag skráa</summary>
+  <summary xml:lang="ie">Accesse e ordina files</summary>
+  <summary xml:lang="id">Mengakses dan mengelola berkas</summary>
+  <summary xml:lang="ia">Accede e organisa files</summary>
+  <summary xml:lang="hu">Fájlok elérése és rendszerezése</summary>
+  <summary xml:lang="hr">Pristupite datotekama i organizirajte ih</summary>
+  <summary xml:lang="hi">फाइलों तक पहुंचें और व्यवस्थित करें</summary>
+  <summary xml:lang="he">גישה לקבצים וארגונם</summary>
+  <summary xml:lang="gu">ફાઇલોને વાપરો અને સંચાલિત કરો</summary>
+  <summary xml:lang="gl">Acceda e organice os seus ficheiros</summary>
+  <summary xml:lang="gd">Faigh cothrom air faidhlichean is rianaich iad</summary>
+  <summary xml:lang="ga">Déan rochtain ar chomhaid agus eagraigh iad</summary>
+  <summary xml:lang="fur">Dopre e organize i files</summary>
+  <summary xml:lang="fr">Accéder aux fichiers et les organiser</summary>
+  <summary xml:lang="fo">Far til og skipa fílur</summary>
+  <summary xml:lang="fi">Käsittele ja järjestä tiedostoja</summary>
+  <summary xml:lang="fa">دسترسی و سازماندهی پرونده‌ها</summary>
+  <summary xml:lang="eu">Atzitu eta antolatu fitxategiak</summary>
+  <summary xml:lang="et">Ligipääs failidele ning failipuu korrastamine</summary>
+  <summary xml:lang="es">Acceder a archivos y organizarlos</summary>
+  <summary xml:lang="eo">Atingi kaj organizi dosierojn</summary>
+  <summary xml:lang="en-GB">Access and organise files</summary>
+  <summary xml:lang="en-CA">Access and organize files</summary>
+  <summary xml:lang="el">Προσπελάστε και οργανώστε αρχεία</summary>
+  <summary xml:lang="de">Auf Dateien zugreifen und diese organisieren</summary>
+  <summary xml:lang="da">Tilgå og organisér filer</summary>
+  <summary xml:lang="cs">Přístup k souborům a jejich správa</summary>
+  <summary xml:lang="crh">Dosyelerge iriş ve olarnı tertiple</summary>
+  <summary xml:lang="ckb">چونەناو و ڕێکخستن</summary>
+  <summary xml:lang="ca-valencia">Organitzeu i accediu a fitxers</summary>
+  <summary xml:lang="ca">Organitzeu i accediu a fitxers</summary>
+  <summary xml:lang="bs-Latn">Pristupite i organizujte datoteke</summary>
+  <summary xml:lang="bn-IN">ফাইলগুলি অ্যাক্সেস এবং সংগঠিত করুন</summary>
+  <summary xml:lang="bn">ফাইলে ব্যবাহর এবং সাজানো</summary>
+  <summary xml:lang="bg">Достъп и управление на файлове</summary>
+  <summary xml:lang="be-Cyrl">Доступ і кіраванне файламі</summary>
+  <summary xml:lang="ast">Acceder a los ficheros y organizalos</summary>
+  <summary xml:lang="as">অভিগম কৰক আৰু ফাইলসমূহ আয়োজিত কৰক</summary>
+  <summary xml:lang="ar">نظم الملفات وصِل إليها</summary>
+  <summary xml:lang="an">Accedir a os fichers y organizar-los</summary>
+  <summary xml:lang="af">Besoek/Deurblaai en organiseer lêers</summary>
+  <description>
+    <p>
+      Files, also known as Nautilus, is the default file manager of the GNOME desktop.
+      It provides a  simple and integrated way of managing your files and browsing your file system.
+    </p>
+    <p xml:lang="zh-Hant-TW">《檔案》即為《Nautilus》，是 GNOME 桌面預設的檔案管理器。提供您一種簡易且完整的方式來管理及瀏覽檔案系統。</p>
+    <p xml:lang="zh-Hans-CN">文件，又名“Nautilus”，是 GNOME 桌面环境的默认文件管理器。它提供简单集成的方式来管理文件和浏览文件系统。</p>
+    <p xml:lang="vi">Tập tin, được biết đến là Nautilus, là ứng dụng quản lý tập tin mặc định cho môi trường máy tính để bàn GNOME. Nó đơn giản và thích hợp cho quản lý và duyệt tập tin trên hệ thống của bạn.</p>
+    <p xml:lang="uz-Latn">Fayllar, shuningdek, Nautilus nomi bilan ham tanilgan, GNOME ish stolining standart fayl boshqaruvchisidir. U fayllaringizni boshqarish va fayl tizimingizni ko'rib chiqishning oddiy va integratsiyalashgan usulini taqdim etadi.</p>
+    <p xml:lang="uk">Файли, також відомий як Nautilus, — типовий файловий менеджер для стільничного середовища GNOME. Він забезпечує просте та інтегроване впорядкування ваших файлів та перегляд файлової системи.</p>
+    <p xml:lang="ug">ھۆججەت، يەنە «Nautilus» دەپمۇ ئاتىلىدۇ، GNOME ئۈستەلئۈستى مۇھىتىدىكى كۆڭۈلدىكى ھۆججەت باشقۇرغۇچ. ئۇ ئاددىي توپلاشتۇرۇلغان ئۇسۇلدا ھۆججەت باشقۇرۇش ۋە ھۆججەت سىستېمىسىغا كۆز يۈگۈرتۈش ئىقتىدارىنى تەمىنلىگەن.</p>
+    <p xml:lang="tr">Nautilus olarak da bilinen Dosyalar, GNOME masaüstünün öntanımlı dosya yöneticisidir. Kolay ve tümleşik biçimde dosyalarınızı yönetmenizi ve dosya sisteminizde gezinmenizi sağlar.</p>
+    <p xml:lang="th">“ไฟล์” หรือที่เรียกอีกชื่อหนึ่งว่า Nautilus เป็นโปรแกรมจัดการไฟล์เริ่มต้นของเดสก์ท็อป GNOME ซึ่งจัดเตรียมวิธีที่ง่ายและมีบูรณาการในการจัดการไฟล์และท่องดูระบบไฟล์ของคุณ</p>
+    <p xml:lang="sv">Filer, också känd som Nautilus, är standardfilhanteraren för GNOME-skrivbordet. Den tillhandahåller ett enkelt och integrerat sätt att hantera dina filer samt bläddra i ditt filsystem.</p>
+    <p xml:lang="sr-Latn">Datoteke, takođe poznate i kao Nautilus, je podrazumevani upravnik datoteka Gnomove radne površi. Obezbeđuje jednostavan i objedinjeni način za upravljanje vašim datotekama i za razgledanje vašeg sistema datoteka.</p>
+    <p xml:lang="sr-Cyrl">Датотеке, познате и као Наутилус, су подразумевани управник датотека Гномове радне површи. Оне обезбеђују једноставан и обједињени начин за управљање вашим датотекама и за разгледање вашег система датотека.</p>
+    <p xml:lang="sl">Program Nautilus, znan tudi z imenom Datoteke, je privzeti upravljalnik datotek za namizje GNOME. Enostaven vmesnik in široka povezanost programnika omogoča brskanje in upravljanje datotek tudi znotraj različnih programov.</p>
+    <p xml:lang="sk">Aplikácia Súbory, tiež známa ako Nautilus, je predvolený správca súborov prostredia GNOME. Poskytuje jednoduchý a integrovaný spôsob spravovania vašich súborov a prehliadania vášho systému súborov.</p>
+    <p xml:lang="ru">Файлы — файловый менеджер по умолчанию для рабочего стола GNOME, также известный как приложение «Nautilus». Предоставляет простой способ для управления файлами и навигации по файловой системе.</p>
+    <p xml:lang="ro">Fișiere, cunoscut și ca Nautilus, este administratorul de fișiere prestabilit al interfeței grafice GNOME. Furnizează o modalitate simplă și integrată de administrare a fișierelor și de navigare prin sistemul de fișiere.</p>
+    <p xml:lang="pt-BR">Arquivos, também conhecido como Nautilus, é o gerenciador de arquivos padrão do ambiente GNOME. Ele oferece uma maneira simples e integrada de gerenciar seus arquivos e de navegar pelo sistema de arquivos.</p>
+    <p xml:lang="pt">O Ficheiros, também conhecido por Nautilus, é o gestor de ficheiros predefinido do ambiente de trabalho GNOME. Este fornece uma forma simples e integrada de gerir os seus ficheiros e de navegar no seu sistema.</p>
+    <p xml:lang="pl">Menedżer plików, znany także jako Nautilus, jest domyślnym menedżerem plików dla środowiska GNOME. Dostarcza on prosty i zintegrowany sposób na zarządzanie plikami i przeglądanie systemu plików.</p>
+    <p xml:lang="pa">ਫਾਇਲਜ਼ (Files), ਜਿਸ ਨੂੰ ਨਟੀਲਸ ਵੀ ਕਹਿੰਦੇ ਹਨ, ਗਨੋਮ ਡੈਸਕਟਾਪ ਲਈ ਡਿਫਾਲਟ ਫ਼ਾਇਲ ਮੈਨੇਜਰ ਹੈ। ਇਹ ਤੁਹਾਡੀਆਂ ਫ਼ਾਇਲਾਂ ਦੇ ਇੰਤਜ਼ਾਮ ਅਤੇ ਤੁਹਾਡੇ ਫ਼ਾਇਲ ਸਿਸਟਮ ਦੀ ਝਲਕ ਵੇਖਾਉਣ ਲਈ ਸਧਾਰਨ ਅਤੇ ਸਾਂਝਾ ਢੰਗ ਦਿੰਦਾ ਹੈ।</p>
+    <p xml:lang="oc">Fichièrs, tanben conegut jol nom de Nautilus, es lo gestionari de fichièrs per defaut del burèu GNOME. Ofrís un mejan simple e integrat de gerir vòstres fichièrs e navigar dins vòstre sistèma de fichièrs.</p>
+    <p xml:lang="nl">Bestanden, ook bekend onder de naam Nautilus, is het standaard bestandsbeheerprogramma voor de GNOME-werkomgeving. Op een eenvoudige en geïntegreerde wijze kunt u hiermee uw bestanden beheren en uw bestandssysteem verkennen.</p>
+    <p xml:lang="ne">नटिलस, उर्फ फाइल, जिनोम डेस्क्टपको पूर्वनिर्धारित फाइल प्रबन्धक हो । यसले तपाईँको फाइल व्यवस्थापन गर्न र आफ्नो फाइलहरू खोज्न एक सरल र एकीकृत तरिका प्रदान गर्छ।.</p>
+    <p xml:lang="nb">Filer er filutforskeren til GNOME. Den gjør det mulig å organisere filer og bevege seg rundt i filsystemet på en lettvint og effektiv måte.</p>
+    <p xml:lang="my">နောတီလပ် ဟုအသိများသော ဖိုင် သည် နုန်ဒက်စ်တော့ပ်၏ဖိုင်မန်နေဂျာဖြစ်ပါသည်။</p>
+    <p xml:lang="ms">Fail, juga dikenali sebagai Nautilus, merupakan pengurus fail lalai untuk atas meja GNOME. Ia menawarkan cara mengurus fail dan melayari sistem fail yang mudah dan bersepadu.</p>
+    <p xml:lang="lv">Datnes, zināms arī kā “Nautilus” ir GNOME darbvirsmas noklusējuma datņu pārvaldnieks. Tas sniedz vienkāršu un integrētu datņu pārvaldības un datņu sistēmas pārlūkošanas veidu.</p>
+    <p xml:lang="lt">Failai, dar žinoma kaip Nautilus, yra numatytoji GNOME darbalaukio failų tvarkytuvė. Ji suteikia paprastą ir integruotą būdą failų tvarkymui ir failų sistemos naršymui.</p>
+    <p xml:lang="lo">ໄຟລ໌ (Files) ຫຼື ທີ່ຮູ້ຈັກກັນໃນຊື່ Nautilus, ແມ່ນຕົວຈັດການໄຟລ໌ເລີ່ມຕົ້ນຂອງ GNOME. ມັນຊ່ວຍໃຫ້ຈັດການໄຟລ໌ ແລະ ສຳຫຼວດລະບົບໄຟລ໌ໄດ້ຢ່າງງ່າຍດາຍ.</p>
+    <p xml:lang="ko">파일(노틸러스라고도 함)은 그놈 데스크톱의 기본 파일 관리 프로그램입니다. 이 프로그램을 이용해 간단하고 통합된 방식으로 파일을 관리하고 파일 시스템을 찾아 볼 수 있습니다.</p>
+    <p xml:lang="kk-Cyrl">Файлдар (сонымен қатар Nautilus ретінде белгілі) - бұл GNOME жұмыс үстелі үшін негізгі файлдық басқарушысы. Ол файлдарды басқару және жүйені шолудың қарапайым және интеграцияланған жолын ұсынады.</p>
+    <p xml:lang="ka">Files, ასევე ცნობილი, როგორც Nautilus, სამუშაო მაგიდა GNOME-ის ნაგულისხმებ ფაილების მმართველს წარმოადგენს. მას თქვენი ფაილების მართვისა და ფაილური სისტემის დათვალიერების იოლი და ინტეგრირებული გზა აქვს არჩეული.</p>
+    <p xml:lang="ja">ファイル (Nautilus) は、GNOME デスクトップの標準ファイルマネージャーです。ファイルを管理し、ファイルシステムを閲覧するためのシンプルで統合された方法を提供します。</p>
+    <p xml:lang="it">File, noto anche come «Nautilus», è il gestore di file predefinito dell'ambiente grafico GNOME. Offre un modo semplice e integrato per gestire i file ed esplorare il file system.</p>
+    <p xml:lang="is">Skráastjórinn, einnig þekktur sem Nautilus, er sjálfgefinn skráastjóri GNOME skjáborðsumhverfisins. Þetta er einföld og samtvinnuð leið til að sýsla með skrár og til að vafra um á skráakerfinu.</p>
+    <p xml:lang="id">Berkas, yang juga dikenal sebagai Nautilus, adalah manajer berkas bawaan dari destop GNOME. Ini menyediakan cara terintegrasi dan sederhana untuk pengelolaan berkas-berkas Anda dan meramban sistem berkas Anda.</p>
+    <p xml:lang="hu">A Fájlok, más néven Nautilus a GNOME asztali környezet alapértelmezett fájlkezelője. Egyszerű és integrált lehetőségeket nyújt a fájlok kezeléséhez és fájlrendszere tallózásához.</p>
+    <p xml:lang="hr">Datoteke, još poznate i kao Nautilus, je uobičajeni upravitelj datoteka za GNOME radno okruženje. Pruža jednostavan i integriran način upravljanja vašim datotekama i pregledavanje vašeg datotečnog sustava.</p>
+    <p xml:lang="hi">&lt;i&gt;फाइल्स&lt;/i&gt;, जिसे नॉटिलस के नाम से भी जाना जाता है, गनोम डेस्कटॉप का तयशुदा फाइल प्रबंधक है। यह आपकी फाइलों को प्रबंधित करने और फाइल सिस्टम को देखने का एक सरल और एकीकृत तरीका प्रदान करता है।</p>
+    <p xml:lang="he">‏קבצים, ידוע גם כ־Nautilus, הוא מנהל הקבצים כבררת מחדל עבור שולחן העבודה GNOME. הוא מספק דרך פשוטה ומשולבת לניהול הקבצים שלך ולעיון במערכת הקבצים שלך.</p>
+    <p xml:lang="gl">Nautilus, tamén coñecido como Ficheiros, é o xestor de ficheiros por omisión do escritorio GNOME. Fornece unha forma simple e integrada de xestionar os seus ficheiros e explorar o seu sistema de ficheiros.</p>
+    <p xml:lang="fur">Files, cognossût ancje come Nautilus, al è il gjestôr di file predefinît dal ambient grafic GNOME. Al furnìs une semplice e integrade maniere di ministrâ i tiei files e esplorâ il to file-system.</p>
+    <p xml:lang="fr">Fichiers, également connu sous le nom de Nautilus, est le gestionnaire de fichiers par défaut du bureau GNOME. Il offre un moyen simple et intégré de gérer vos fichiers et naviguer dans votre système de fichiers.</p>
+    <p xml:lang="fo">Fílur, eisini kent sum Nautilus, er forsetti fílukagin í GNOME skriviborðsumhvørvinum. Forriti veitir ein einfaldan og samfeldan hátt at skipa tínar fílur og kaga fílukervi.</p>
+    <p xml:lang="fi">Tiedostot, joka tunnetaan myös nimellä Nautilus, on Gnome-työpöydän tiedostonhallinnan oletussovellus. Sen avulla tiedostojen selailu ja hallinta on vaivatonta.</p>
+    <p xml:lang="fa">پرونده‌ها که به نام ناتیلوس نیز شناخته می‌شود، مدیر پروندهٔ پیش‌گزیده میزکار گنوم است. این برنامه راهی ساده و یک‌پارچه برای مدیریت پرونده‌ها و مرور سامانه‌پرونده‌هایتان فراهم می‌کند.</p>
+    <p xml:lang="eu">Fitxategiak aplikazioa, Nautilus izenarekin ere ezaguna dena, GNOME mahaigainaren fitxategi-kudeatzaile lehenetsia da. Zure fitxategiak kudeatzeko eta baita fitxategi-sistema arakatzeko modu bateratua eta xumea eskaintzen du.</p>
+    <p xml:lang="es">Archivos, también conocido como Nautilus, es el gestor de archivos predeterminado del escritorio GNOME. Proporciona una manera sencilla e integrada para gestionar sus archivos y explorar el sistema de archivos.</p>
+    <p xml:lang="eo">Dosieroj, ankaŭ konata kiel Naŭtilo, estas la implicita dosieradministrilo de GNOME. Ĝi disponigas simplan kaj integritan manieron de administrado de viaj dosieroj kaj foliumado de via dosiersistemo.</p>
+    <p xml:lang="en-GB">Files, also known as Nautilus, is the default file manager of the GNOME desktop. It provides a simple and integrated way of managing your files and browsing your file system.</p>
+    <p xml:lang="el">Ο Ναυτίλος, γνωστός και ως Αρχεία, είναι ο προεπιλεγμένος διαχειριστής αρχείων του GNOME. Προσφέρει έναν απλό και ολοκληρωμένο τρόπο διαχείρισης των αρχείων και περιήγησης του συστήματος αρχείων.</p>
+    <p xml:lang="de">Dateien, auch bekannt als Nautilus, ist die mitgelieferte Dateiverwaltung der GNOME Arbeitsumgebung. Sie bietet eine einfache und maßgeschneiderte Art, Ihre Dateien zu verwalten und Ihr Dateisystem zu durchsuchen.</p>
+    <p xml:lang="da">Programmet Filer, også kendt som Nautilus, er standardfilhåndteringen for GNOME-skrivebordet. Nautilus tilbyder en simpel og integreret måde at gennemse filsystemet på og filhåndtering generelt.</p>
+    <p xml:lang="cs">Aplikace Soubory, známá i pod názvem Nautilus, je výchozí správce souborů pro uživatelské prostředí GNOME. Poskytuje jednoduchou a dobře začleněnou správu vašich souborů a procházení vaším souborovým systémem.</p>
+    <p xml:lang="ckb">پەڕگەکان، هەروەها بە ناوی ناوتیلەس بەناوبانگە، بریتیە لە نەرمەکاڵای بنەڕەتی بۆ بەڕێوەبردنی پەڕگە لە گنۆم. شیوازێکی سادە و گونجێنراو و تایبەتمەندی زۆر دابین دەکات بۆ ڕێکخستن و گەڕان بەناو پەڕگەکانی سیستمەکەت.</p>
+    <p xml:lang="ca">El Fitxers, també conegut com el Nautilus, és el gestor de fitxers per defecte de l'escriptori GNOME. Permet, d'una forma simple i integrada, la gestió de fitxers i la navegació pel sistema de fitxers.</p>
+    <p xml:lang="bn-IN">নটিলাস নামে পরিচিত ফাইলস হ'ল জিনোম ডেস্কটপের ডিফল্ট ফাইল ম্যানেজার। এটি আপনার ফাইলগুলি পরিচালনা করার এবং আপনার ফাইল সিস্টেমটি ব্রাউজ করার একটি সহজ এবং সংহত পদ্ধতি সরবরাহ করে।</p>
+    <p xml:lang="bg">„Файлове“, известно още като Наутилус (Nautilus) е стандартният мениджър на файлове в работната среда GNOME. Той предоставя лесен и интегриран в средата начин за управление на файловете и преглед на файловата система.</p>
+    <p xml:lang="be-Cyrl">Файлы — прадвызначаны кіраўнік файлаў для асяроддзя GNOME, які таксама вядомы як Nautilus. Ён прадастаўляе просты і зручны спосаб кіравання файламі і файлавымі сістэмамі.</p>
+    <p xml:lang="ar">الملفات، المعروف بـ«نوتلس»، هو مدير الملفات المبدئي لسطح مكتب جنوم. يوفر طريقة سهلة ومتكاملة لإدارة ملفاتك وتصفح نظام الملفات.</p>
+    <p>
+      Nautilus supports all the basic functions of a file manager and more.
+      It can search and manage your files and folders, both locally and on a network,
+      read and write data to and from removable media, run scripts, and launch apps.
+      It has three views: Icon Grid, Icon List, and Tree List.
+      Its functions can be extended with plugins and scripts.
+    </p>
+    <p xml:lang="zh-Hant-TW">《檔案》不僅支援一切基礎的檔案管理功能，亦支援：搜尋與管理您的檔案與資料夾、連接線上位置與遠端伺服器、讀寫卸除式媒體的資料、執行命令稿與啟動應用程式。主介面支援兩種檢視畫面：圖示檢視與列表檢視；並能透過外掛元件與命令稿來延伸功能。</p>
+    <p xml:lang="zh-Hans-CN">“文件”不仅提供所有基本的文件管理功能，还支持搜索和管理本地和远程网络上的文件及文件夹，读写可移动存储上的数据，运行脚本和启动应用。它有三种视图：图标网格、图标列表、树列表。可以用插件和脚本扩展它的功能。</p>
+    <p xml:lang="vi">Nautilus hỗ trợ mọi tính năng cơ bản về quản lý tập tin và hơn thế nữa. Nó có thể tìm kiếm và quản lý các tập tin và thư mục của bạn, cả trên máy nội bộ và cả trên mạng, đọc và ghi dữ liệu từ và đến từ đĩa đa phương tiện, chạy văn lệnh, và khởi chạy các ứng dụng. Nó có ba cách trình bày: Dạng lưới biểu tượng, Danh sách biểu tượng, và cây. Các tính năng của nó có thể được mở rộng bằng các phần bổ xung và văn lệnh.</p>
+    <p xml:lang="uz-Latn">Nautilus fayl boshqaruvchisining barcha asosiy funktsiyalarini va boshqalarni qo'llab-quvvatlaydi. U mahalliy va tarmoqdagi fayl va papkalaringizni qidirishi va boshqarishi, olinadigan mediaga va undan maʼlumotlarni oʻqishi va yozishi, skriptlarni ishga tushirishi va ilovalarni ishga tushirishi mumkin. U uchta ko'rinishga ega: Icon Grid, Icon List va Tree List. Uning funktsiyalari plaginlar va skriptlar bilan kengaytirilishi mumkin.</p>
+    <p xml:lang="uk">Nautilus підтримує всі базові можливості файлового менеджера і навіть більше. Він може шукати і впорядковувати ваші файли і теки як локально, так і в мережі, читати і записувати дані через змінний носій, запускати скрипти і запускати програми. Він має три режими перегляду: ґратки піктограм, список піктограм, ієрархічний список. Можливості можна розширити за допомогою додатків і скриптів.</p>
+    <p xml:lang="ug">«Nautilus» ھۆججەت باشقۇرۇشنىڭ بارلىق ئاساسىي ئىقتىدارىنى تەمىنلەپلا قالماي يەنە يەرلىك ۋە يىراق توردىكى ھۆججەت ۋە قىسقۇچنى ئىزدەش ۋە باشقۇرۇشنى قوللايدۇ، كۆچمە ۋاسىتىدىن سانلىق مەلۇمات ئوقۇپ ۋە يازىدۇ، قوليازما ئىجرا قىلىپ ۋە پىروگراممىنى قوزغىتىدۇ. ئۇنىڭ سىنبەلگە تورى، سىنبەلگە تىزىمى ۋە شاخسىمان تىزىمدىن ئىبارەت ئۈچ خىل كۆرۈنۈشى بار. قىستۇرما ۋە قوليازما ئارقىلىق ئۇنىڭ ئىقتىدارىنى كېڭەيتكىلى بولىدۇ.</p>
+    <p xml:lang="tr">Nautilus, bir dosya yöneticisindeki tüm temel işlevleri ve daha çoğunu bulundurur. Hem bilgisayarınızdaki hem de ağdaki dosyalarınızı ve klasörlerinizi arayabilir ve yönetebilir, çıkarılabilir ortamlara veri yazabilir ve okuyabilir, betik ve uygulamaları çalıştırabilir. Üç tür görünümü bulunur: Simge, Liste ve Ağaç. Nautilus’un işlevleri eklentiler ve betiklerle genişletilebilir.</p>
+    <p xml:lang="th">Nautilus รองรับการทำงานพื้นฐานทุกอย่างของเครื่องมือจัดการไฟล์และมากกว่านั้น สามารถค้นหาและจัดการไฟล์และโฟลเดอร์ของคุณ ทั้งในเครื่องและบนเครือข่าย อ่านและเขียนข้อมูลกับสื่อถอดเสียบ เรียกทำงานสคริปต์ และเรียกทำงานแอป Nautilus มี 3 มุมมองให้เลือกใช้: แถวตารางไอคอน, รายชื่อไอคอน และแบบต้นไม้ การทำงานต่างๆ สามารถขยายต่อเติมได้โดยใช้ปลั๊กอินและสคริปต์</p>
+    <p xml:lang="sv">Nautilus stöder en filhanterares alla grundläggande funktioner och mer därtill. Den kan söka och hantera din filer och mappar, både lokalt och på ett nätverk, läsa och skapa data till och från utbytbar media, köra skript, och starta program. Den har tre vyer: Ikonrutnät, ikonlista, och trädlista. Dess funktioner kan utökas med insticksmoduler och skript.</p>
+    <p xml:lang="sr-Latn">Nautilus podržava sve osnovne funkcije upravnika datoteka i još po nešto. Može da pretražuje i upravlja vašim datotekama i fasciklama, kako u mestu tako i na mreži, da čita i piše podatke na i sa uklonjivih medijuma, da izvršava skripte, i da pokreće programe. Poseduje tri pregleda: mrežu ikonica, spisak ikonica i pregled u stablu. Njegove funkcije mogu biti proširene priključcima i skriptama.</p>
+    <p xml:lang="sr-Cyrl">Наутилус подржава све основне функције управника датотека и још по нешто. Може да претражује и управља вашим датотекама и фасциклама, како у месту тако и на мрежи, да чита и пише податке на и са уклоњивих медијума, да извршава скрипте, и да покреће програме. Поседује три прегледа: мрежу иконица, списак иконица и преглед у стаблу. Његове функције могу бити проширене прикључцима и скриптама.</p>
+    <p xml:lang="sl">Program Nautilus podpira vse osnovne funkcije upravljalnika datotek in še mnogo več. Omogoča iskanje in urejanje datotek in map krajevno in v omrežju, branje in pisanje podatkov na odstranljive nosilce, zagon skriptov in programov. Podpira tri poglede; ikonski, seznamski in drevesni. Vse funkcije je mogoče razširiti s vstavki in skripti.</p>
+    <p xml:lang="sk">Program Nautilus podporuje všetky základné funkcie správcu súborov a ešte viac. Dokáže vyhľadať a spravovať vaše súbory a priečinky, miestne aj v sieti, čítať a zapísať údaje na vymeniteľných médiách, spúšťať skripty a aplikácie. Obsahuje tri druhy zobrazení: Mriežka ikôn, zoznam ikon a stromové zobrazenie. Jeho funkcie môžete rozšíriť pomocou zásuvných modulov a skriptov.</p>
+    <p xml:lang="ru">Nautilus поддерживает все базовые функции файловых менеджеров. С помощью Nautilus можно управлять файлами и папками, выполнять поиск файлов и папок как локально, так и по сети, читать и записывать данные на съёмные устройства, выполнять сценарии и запускать приложения. Nautilus предлагает три режима просмотра: сетка из значков, список из значков и древовидный список. Функциональность Nautilus можно расширять с помощью модулей и сценариев.</p>
+    <p xml:lang="ro">Nautilus are toate caracteristicile de bază ale unui administrator de fișiere și chiar mai multe. Poate căuta și administra fișiere și dosare, atât local cât și într-o rețea, poate citi și scrie date de pe și către medii de stocare detașabile, porni scripturi, și lansa aplicații. Vine cu trei moduri de afișare: grilă de simboluri, listă de simboluri și listă ramificată. Funcționalitatea sa poate fi extinsă cu ajutorul modulelor și a scripturilor.</p>
+    <p xml:lang="pt-BR">O Nautilus possui suporte a todas as funções básicas de um gerenciador de arquivos e muitas mais. Ele pode pesquisar e gerenciar seus arquivos e pastas, tanto localmente quanto em uma rede, ler e gravar dados de e para mídias removíveis, executar scripts e executar aplicativos. O mesmo possui três visões: grade de ícones, lista de ícones e lista em árvore. E as funções dele podem ser estendidas com plug-ins e scripts.</p>
+    <p xml:lang="pt">O Nautilus suporta todas as funções básicas de um gestor de ficheiros e mais algumas. Pode procurar e gerir os seus ficheiros e pastas, quer localmente, quer numa rede, ler e gravar dados de e para unidades removíveis, executar scripts e iniciar aplicações. Tem três vistas: Grelha de ícones, Lista de ícones e Lista em árvore. As suas funções podem sem alargadas com plugins e scripts.</p>
+    <p xml:lang="pl">Program Nautilus obsługuje wszystkie podstawowe funkcje menedżera plików, a także wiele więcej. Może wyszukiwać i zarządzać plikami i katalogami, zarówno lokalnie, jak i w sieci, odczytywać i zapisywać dane na i z nośników wymiennych, wykonywać skrypty i uruchamiać programy. Ma on trzy widoki: siatkę ikon, listę ikon i listę w formie drzewa. Jego funkcje mogą być rozszerzane za pomocą wtyczek i skryptów.</p>
+    <p xml:lang="pa">ਨਟੀਲਸ ਫ਼ਾਇਲ ਮੈਨੇਜਰ ਲਈ ਸਭ ਮੁੱਢਲੀਆਂ ਸਹੂਲਤ ਦਿੰਦਾ ਹੈ। ਇਹ ਤੁਹਾਡੀਆਂ ਫ਼ਾਇਲਾਂ ਤੇ ਫੋਲਡਰਾਂ ਲਈ ਲੋਕਲ ਅਤੇ ਨੈੱਟਵਰਕ, ਦੋਵਾਂ ਉੱਤੇ ਲੱਭਣ ਅਤੇ ਉਹਨਾਂ ਦੇ ਪ੍ਰਬੰਧ ਲਈ, ਹਟਾਉਣਯੋਗ ਮੀਡਿਆ ਉੱਤੇ ਡਾਟਾ ਲਿਖਣ ਤੇ ਪੜ੍ਹਨ, ਸਕ੍ਰਿਪਟਾਂ ਚਲਾਉਣ ਅਤੇ ਐਪ ਚਲਾਉਣ ਲਈ ਮੱਦਦ ਕਰ ਸਕਦਾ ਹੈ। ਇਸ ਵਿੱਚ ਤਿੰਨ ਝਲਕਾਂ ਹਨ: ਆਈਕਾਨ ਗਰਿੱਡ, ਆਈਕਾਨ ਸੂਚੀ, ਅਤੇ ਟਰੀ ਸੂਚੀ। ਇਸ ਦੇ ਕੰਮਾਂ ਨੂੰ ਪਲੱਗਇਨ ਅਤੇ ਸਕ੍ਰਿਪਟਾਂ ਨਾਲ ਵਧਾਇਆ ਜਾ ਸਕਦਾ ਹੈ।</p>
+    <p xml:lang="oc">Nautilus ofrís totas las foncionalitats basicas e avançadas d'un gestionari de fichièrs. Pòt recercar e gerir vòstres fichièrs e dorsièrs, locals o sus una ret, legir e escriure de donadas cap a de mèdias amovibles, executar d'escripts e d'aplicacions. Presenta tres vistas : grasilha d'icònas, lista d'icònas, e lista arborescenta. Sas foncionalitats pòdon èsser espandidas amb d'empeutons e d'escripts.</p>
+    <p xml:lang="nl">Nautilus ondersteunt alle basisfuncties van een bestandsbeheerprogramma en meer. U kunt uw bestanden en mappen doorzoeken en beheren, zowel lokaal als op een netwerk, gegevens lezen van en schrijven naar verwijderbare media, scripts uitvoeren, en toepassingen starten. Er zijn drie vormen van weergave: pictogrammenraster, pictogrammenlijst en boomstructuurlijst. De functies kunnen uitgebreid worden met plug-ins en scripts.</p>
+    <p xml:lang="ne">नटिलसले फाइल प्रबन्धकका सबै आधारभूत कार्यहरू र अधिक समर्थन गर्दछ। यसले तपाईंको फाइलहरू र फोल्डरहरू खोजी गर्न र व्यवस्थापन गर्न सक्दछ, दुबै स्थानीय रूपमा र नेटवर्कमा, हटाउन सकिने मिडियामा र बाट डेटा पढ्न र लेख्न, स्क्रिप्टहरू चलाउन र अनुप्रयोगहरू सुरू गर्न सक्दछ। यसमा तीन दृश्यहरू छन्: आइकन ग्रिड, आइकन सूची, र ट्री सूची। यसको प्रकार्यहरू प्लगइन्स र स्क्रिप्टहरूसँग विस्तार गर्न सकिन्छ।.</p>
+    <p xml:lang="nb">Filer har alt det grunnleggende en filutforsker bør ha, og mer. Den kan søke etter og behandle filer og mapper, utforske filer på nettverket, presentere filer i både liste- og rutenettmodus, lese og skrive data til og fra eksterne medier, kjøre skript og åpne apper. Filer kan dessuten tilpasses med utvidelser og skript.</p>
+    <p xml:lang="my">Nautilus သည် ဖိုင်မန်နေဂျာတစ်ခု၏ ရှိရမည့် အခြေခံလုပ်ဆောင်ချက်များကို လုပ်နိုင်သည့်အပြင် သင်၏ဖိုင်နှင့်ဖိုင်တွဲများကို စက်တွင်း သာမက ကွန်ရက်တွင်လည်း ဒေတာများ ရေးဖတ်နိုင်ပါသည်။ စေခိုင်းကုဒ်များ မောင်းနှင်ပေး၍ အပ္ပလီကေးရှင်းများကိုလည်း လွှင့်တင်ပေးနိုင်ပါသည်။ ၎င်းတွင် အိုင်ကွန် တိုင်-တန်း၊ အိုင်ကွန် စာစဉ်၊ နှင့် သစ်ပစ်စာစဉ် စသည့် မြင်ကွင်းသုံးမျိုး သုံးထားပါသည်။ ၎င်း၏စွမ်းရည်များကိုလည်း ပလပ်ဂင်များ၊ ညွှန်ကြားစာများသုံး၍လည်း တိုးချဲ့နိုင်ပါသေးသည်။</p>
+    <p xml:lang="lv">Nautilus atbalsta arī visas pamata datņu pārvaldnieka funkcijas un vēl vairāk. Tas var meklēt un pārvaldīt datnes un mapes, gan lokāli, gan tīklā, lasīt un rakstīt datnes noņemamos datu nesējos, izpildīt skriptus un palaist lietotnes. Tam ir trīs skati — ikonu režģis, ikonu saraksts un koka saraksts. Tā funkcionalitāti var paplašināt ar spraudņiem un skriptiem.</p>
+    <p xml:lang="lt">Nautilus palaiko visas pagrindines failų tvarkytuvės funkcijas ir daugiau. Galima ieškoti bei tvarkyti failus ir aplankus, tiek vietoje, tiek tinkle, skaityti ir rašyti duomenis į išimamas laikmenas, vykdyti scenarijus bei paleisti programas. Yra trys rodiniai: piktogramų tinklelis, piktogramų sąrašas bei medžio sąrašas. Funkcijas galima praplėsti įskiepiais ir scenarijais.</p>
+    <p xml:lang="lo">Nautilus ຮອງຮັບທຸກຟັງຊັນພື້ນຖານຂອງຕົວຈັດການໄຟລ໌ ແລະ ອື່ນໆອີກຫຼາຍຢ່າງ. ມັນສາມາດຄົ້ນຫາ ແລະ ຈັດການໄຟລ໌ທັງໃນເຄື່ອງ ແລະ ເຄືອຂ່າຍ, ຂຽນ/ອ່ານຂໍ້ມູນຈາກສື່ບັນທຶກພາຍນອກ, ແລະ ເປີດໃຊ້ແອັບຕ່າງໆ. ມັນມີ 3 ມຸມມອງຄື: ແບບຕາຕະລາງ, ແບບລາຍການ ແລະ ແບບຜັງຕົ້ນໄມ້.</p>
+    <p xml:lang="ko">노틸러스는 파일 관리자의 모든 기본 기능을 지원하고 더 많은 기능이 있습니다. 노틸러스에서 로컬이든 원격 모두에 있는 파일과 폴더를 검색하고 관리할 수 있고, 이동식 미디어에서 데이터를 읽고 쓸 수 있고, 스크립트와 앱을 실행할 수 있습니다. 노틸러스는 세 가지 종류의 보기 모드가 있습니다. 아이콘 격자, 아이콘 목록, 계층 구조 목록입니다. 노틸러스의 기능은 플러그인과 스크립트를 이용해 확장할 수 있습니다.</p>
+    <p xml:lang="kk-Cyrl">Nautilus файлдар басқарушысының барлық қарапайым, және одан да көп мүмкіндіктерін қолдайды. Ол жергілікті және желідегі файлдар және бумаларды іздеп, оларды басқара алады, ауыстырмалы тасушылардан және оларға жазып, оқи алады, скрипттерді және қолданбаларды жөнелте алады. Оның үш көрінісі бар: таңбашалар торы, таңбашалар тізімі және ағаш тектес тізім. Оның мүмкіндіктерін плагиндер және скрипттермен кеңейтуге болады.</p>
+    <p xml:lang="ka">Nautilus-ს ფაილის მმართველის ყველა ძირითადი ფუნქცია აქვს და უფრო მეტიც. მას შეუძლია მოძებნოს და მართოს თქვენი ფაილები და საქაღალდეები, ორივე, ლოკალურად და ქსელში, წაიკითხოს და ჩაწეროს მონაცემები მოხსნად მედიაზე, გაუშვას სკრიპტები და აპები. აქვს სამი ხედი: ხატულების ხედი, ხატულების სია და ხის სია. მისი ფუნქციები, შეგიძლიათ, დამატებებით და სკრიპტებით განავრცოთ.</p>
+    <p xml:lang="ja">Nautilus は、ファイルマネージャーとしての基本的な機能に加えて、さらに便利な機能も提供します。ローカルおよびネットワーク上のファイルやフォルダーの検索と管理、リムーバブルメディアのデータ読み書き、スクリプトの実行、アプリの起動などができます。グリッド表示、一覧表示、ツリーリスト表示の3種類の表示を切り替えられます。機能はプラグインやスクリプトで拡張できます。</p>
+    <p xml:lang="it">Nautilus supporta tutte le funzionalità di base di un gestore di file e molto altro: è in grado di eseguire ricerche e gestire file e cartelle (localmente e da remoto), leggere e scrivere da supporti rimovibili, eseguire script e lanciare applicazioni. Dispone di tre diverse tipologie di visualizzazione: una griglia ad icone, un elenco ad icone e un elenco ad albero. È possibile estenderne le funzionalità attraverso plugin e script.</p>
+    <p xml:lang="is">Nautilus styður allar helstu aðgerðir við umsýslu skráa, og fleira til. Hann getur leitað að og meðhöndlað skrár og möppur, bæði á tölvunni sjálfri sem og á netkerfum. Hann getur lesið og skrifað gögn á útskiptanlegum gagnamiðlum, keyrt skriftur og keyrt forrit. Hann er með þrenns konar ásýnd: uppraðaðar táknmyndir, táknmyndir í lista og greinalistasýn. Hægt er að bæta við eiginleika með hjálparforritum (plugins) og með skriftum.</p>
+    <p xml:lang="id">Nautilus mendukung semua fungsi dasar dari suatu manajer berkas dan lebih. Ini dapat mencari dan mengelola berkas dan folder Anda, lokal dan pada jaringan, membaca dan menulis data ke dan dari media lepas pasang, menjalankan skrip, dan meluncurkan aplikasi. Ini memiilki tiga tilikan, Kisi Ikon, Daftar Ikon, dan Daftar Pohon. Fungsinya bisa diperluas dengan pengaya dan skrip.</p>
+    <p xml:lang="hu">A Nautilus támogatja a fájlkezelők alapvető funkcióit és még sok mást is. Képes fájlok és mappák keresésére és kezelésére helyileg és a hálózaton egyaránt, adatokat olvasni és írni cserélhető adathordozókra, parancsfájlokat futtatni és alkalmazásokat elindítani. Három nézete van: ikonrács, ikonlista és falista. Funkcionalitása bővítményekkel és parancsfájlokkal bővíthető.</p>
+    <p xml:lang="hi">नॉटिलस फाइल प्रबंधक के सभी बुनियादी कार्यों और उससे भी अधिक का समर्थन करता है। यह स्थानीय और नेटवर्क दोनों पर आपकी फाइलों और फोल्डरों को खोज और प्रबंधित कर सकता है, हटाने योग्य मीडिया से डेटा पढ़ और लिख सकता है, स्क्रिप्ट चला सकता है और ऐप्स लॉन्च कर सकता है। इसमें तीन दृश्य हैं: चिह्न ग्रिड, चिह्न सूची और ट्री सूची। इसके कार्यों को प्लगइन्स और स्क्रिप्ट के साथ बढ़ाया जा सकता है।</p>
+    <p xml:lang="he">‏Nautilus תומך בכל הפעולות הבסיסיות של מנהל קבצים ויותר. הוא יכול לחפש ולנהל את הקבצים והתיקיות שלך, הן המקומיים והן על הרשת, לקרוא ולכתוב מידע אל וממדיות נתיקות, להריץ תסריטים ולשגר יישומים. יש לו שלוש תצוגות: רשת סמלים, רשימת סמלים ורשימת עץ. ניתן להרחיב את הפעולות שלו עם תוספים ותסריטים.</p>
+    <p xml:lang="gl">Nautilus admite todas as funcións básicas de xestión de ficheiros e máis. Pode buscar e xestionar todos os seus ficheiros e cartafoles, tanto locais como nunha rede, lee e escribe datos nos soportes multimedia, executa scripts e inicia aplicacións. Conta con tres vistas: Grade de iconas, Lista de iconas e Lista en árbore. As súas funcións poden estenderse con engadidos e scripts.</p>
+    <p xml:lang="fur">Nautilus al supuarte dutis lis funzions basilârs di un gjestôr di file e alc di plui. Al pues cirî e ministrâ i tiei files e cartelis (in locâl e suntune rêt), lei e scrivi dâts viers e di dispositîfs estraibii, eseguî scripts e fâ partî aplicazions. Al à trê viodudis: Gridele di iconis, liste di iconis e liste a arbul. Al è pussibil aumentâ lis sôs funzions cun plugins e scripts.</p>
+    <p xml:lang="fr">Nautilus offre toutes les fonctionnalités basiques et avancées d’un gestionnaire de fichiers. Il peut rechercher et gérer vos fichiers et dossiers, locaux ou sur un réseau, lire et écrire des données vers des médias amovibles, exécuter des scripts et des applications. Il présente trois vues : grille d’icônes, liste d’icônes, et liste arborescente. Ses fonctionnalités peuvent être étendues avec des greffons et des scripts.</p>
+    <p xml:lang="fi">Nautilus tukee kaikkia tiedostonhallintasovellusten perustoimintoja. Sen avulla voit etsiä ja hallita niin paikallisia kuin verkossa olevia tiedostoja sekä kansioita, lukea ja kirjoittaa tietoa erillisiin tallennusvälineisiin, suorittaa komentosarjoja ja käynnistää sovelluksia. Se tukee kolmea eri näkymää: kuvakeruudukko, kuvakeluettelo ja puuluettelo. Sovelluksen toimintaa on mahdollista laajentaa liitännäisillä ja komentosarjoilla.</p>
+    <p xml:lang="fa">ناتیلوس تمام عملکردهای پایه‌ای یک مدیر پرونده و بیش‌تر از آن را پشتیبانی می‌کند. این برنامه می‌تواند پرونده‌ها و شاخه‌هایتان را چه به صورت محلی و چه روی شبکه جست‌وجو و مدیریت کند، داده‌ها را از رسانه‌های قابل حمل خوانده و رویشان بنویسد و کدنوشته‌ها و کاره‌ها را اجرا کند. این برنامه سه نما دارد: شبکهٔ نقشک، سیاههٔ نقشک و سیاههٔ درختی. عملکردهای این برنامه می‌تواند به‌دست افزایه‌ها و کدنوشته‌ها گسترش یابد.</p>
+    <p xml:lang="eu">Nautilus aplikazioak fitxategi-kudeatzaile baten oinarrizko funtzioak eta askoz gehiago ditu. Zure fitxategiak eta karpetak bilatu eta kudeatu ditzake, bai lokalean baita sarean ere. Datuak euskarri aldagarrietatik irakurri eta idatzi ditzake, scriptak exekutatu eta aplikazioak abiarazi. Hiru ikuspegi ditu: ikonoen sareta, ikonoen zerrenda eta zuhaitzaren zerrenda. Bere gaitasunak hedatu daitezke pluginen eta scripten bidez.</p>
+    <p xml:lang="es">Nautilus soporta todas las funciones básicas de un gestor de archivos y algunas más. Puede buscar y gestionar sus archivos y carpetas, tanto locales como remotas, leer y escribir datos de y en dispositivos extraíbles, ejecutar scripts y lanzar aplicaciones. Tiene tres vistas: rejilla de iconos, lista de iconos y árbol. Se puede ampliar su funcionalidad con scripts y complementos.</p>
+    <p xml:lang="eo">Naŭtilo subtenas ĉiujn bazajn funkciojn de dosieradministrilo kaj pli. Ĝi povas serĉi kaj administri viajn dosierojn kaj dosierujojn, kaj loke kaj en reto, legi kaj skribi datumojn al kaj el forpreneblaj datumportiloj, ruli skriptojn, kaj lanĉi aplikaĵojn. Ĝi havas tri vidojn: Bildsimbola krado, bildsimbola listo kaj arba listo. Ĝiaj funkcioj povas esti etenditaj per kromaĵoj kaj skriptoj.</p>
+    <p xml:lang="en-GB">Nautilus supports all the basic functions of a file manager and more. It can search and manage your files and folders, both locally and on a network, read and write data to and from removable media, run scripts, and launch apps. It has three views: Icon Grid, Icon List, and Tree List. Its functions can be extended with plug-ins and scripts.</p>
+    <p xml:lang="el">Ο Ναυτίλος υποστηρίζει όλες τις βασικές λειτουργίες ενός διαχειριστή αρχείων. Μπορεί να αναζητήσει και να διαχειριστεί τα αρχεία και τους φακέλους σας, τόσο τοπικά όσα και μέσω του δικτύου, να διαβάσει και να γράψει δεδομένα από αφαιρούμενες συσκευές, να εκτελέσει σενάρια ενεργειών, και να εκκινήσει εφαρμογές. Έχει τρεις προβολές: Πλέγμα εικονιδίων, Λίστα εικονιδίων και Δενδρική λίστα. Οι λειτουργίες του μπορούν να επεκταθούν με πρόσθετα και σενάρια ενεργειών.</p>
+    <p xml:lang="de">Nautilus unterstützt alle grundlegenden Funktionen einer Dateiverwaltung und mehr. Es kann nach lokalen und im Netzwerk gelegenen Dateien und Ordnern suchen und diese verwalten, Daten von Wechseldatenträgern lesen und schreiben, Skripte ausführen und Anwendungen starten. Es bietet drei Ansichten: Objekte im Raster, als Liste und die Baumliste. Weitere Funktionen können Plugins und Skripte liefern.</p>
+    <p xml:lang="da">Nautilus understøtter alle de grundlæggende funktioner til filhåndtering med mere. Programmet kan søge blandt og håndtere dine filer og mapper både lokalt og på et netværk, læse og skrive data til og fra flytbare medier, køre scripter samt starte programmer. Det har tre visningsformer: ikongitter, ikonliste og træliste. Dets funktioner kan udvides med moduler og scripter.</p>
+    <p xml:lang="cs">Podporuje všechny základní funkce očekávané od správce souborů a k tomu něco navíc. Umí vyhledávat a spravovat vaše soubory a složky, jak místní, tak síťové, číst a zapisovat data z/na výměnná média, spouštět skripty a aplikace. Má tři způsoby zobrazení: ikony v mřížce, seznam s ikonami a stromové zobrazení. Funkčnost je možné rozšiřovat pomocí zásuvných modulů a skriptů.</p>
+    <p xml:lang="ca">El Nautilus permet realitzar totes les funcions bàsiques d'un gestor de fitxers i molt més. Pot cercar i gestionar els vostres fitxers i carpetes, tan locals com a la xarxa; llegir i escriure dades des de i cap a un medi extraïble; executar scripts i iniciar aplicacions. Té tres visualitzacions: graella d'icones, llista d'icones i llista d'arbre. Es poden ampliar les seves funcions mitjançant connectors i scripts.</p>
+    <p xml:lang="bg">„Файлове“ предоставя основните и допълнителни функции на файлов мениджър. С тази програма може да търсите и управлявате файлове и папки — както локално, така и по мрежата, да четете и записвате данни върху външни носители, да изпълнявате скриптове и да стартирате приложения. „Файлове“ разполага с три изгледа — решетка с икони, списък с икони и дървовиден. Тази програма може да се обогатява със скриптове и разширения.</p>
+    <p xml:lang="be-Cyrl">Nautilus падтрымлівае ўсе звычайныя функцыі кіраўніка файлаў і шмат іншых. Ён падтрымлівае пошук і кіраванне файламі і папкамі, як лакальнымі, так і сеткавымі, чытанне і запіс даных на здымных носьбітах, запуск сцэнарыяў, запуск праграм. Праграма мае тры рэжымы працы: у выглядзе сеткі, спіса або дрэва папак. Nautilus падтрымлівае пашырэнне сваіх функцый з дапамогай плагінаў і сцэнарыяў.</p>
+    <p xml:lang="ar">يدعم نوتلس كل الوظائف الأساسية لمدير ملفات وأكثر. يمكنك البحث في ملفاتك و مجلداتك و إدارتها، محليًا أو عبر الشبكة، و قراءة و كتابة البيانات من و إلى الوسائط المنفصلة، و تشغيل البرامج. لنوتلس ثلاث منظورات: شبكة الأيقونات، و قائمة الأيقونات، و القائمة الشجرية. يمكنك توسيع خصائصه باستخدام الملحقات والإخطاطات.</p>
+  </description>
+  <url type="bugtracker">https://gitlab.gnome.org/GNOME/nautilus/issues</url>
+  <url type="contact">https://discourse.gnome.org/tag/nautilus</url>
+  <url type="contribute">https://welcome.gnome.org/app/Nautilus/</url>
+  <url type="donation">https://www.gnome.org/donate/</url>
+  <url type="help">https://help.gnome.org/users/gnome-help/stable/files.html.en</url>
+  <url type="homepage">https://apps.gnome.org/Nautilus/</url>
+  <url type="translate">https://l10n.gnome.org/module/nautilus/</url>
+  <url type="vcs-browser">https://gitlab.gnome.org/GNOME/nautilus</url>
+  <launchable type="desktop-id">org.gnome.Nautilus.desktop</launchable>
+  <releases>
+    <release version="50.2.2" type="snapshot"/>
+    <release version="50.2.2" type="stable" date="2026-05-25"/>
+    <release version="50.2" type="stable" date="2026-05-23"/>
+    <release version="50.1" type="stable" date="2026-04-11"/>
+    <release version="50.0" type="stable" date="2026-03-14"/>
+    <release version="50~rc" type="development" date="2026-03-01"/>
+    <release version="50~beta" type="development" date="2026-02-01"/>
+    <release version="50~alpha" type="development" date="2026-01-07"/>
+    <release version="49.4" type="stable" date="2026-02-02"/>
+    <release version="49.3" type="stable" date="2026-01-07"/>
+    <release version="49.2" type="stable" date="2025-11-23"/>
+    <release version="49.1" type="stable" date="2025-10-13"/>
+    <release version="49.0" type="stable" date="2025-09-15"/>
+  </releases>
+  <project_group>GNOME</project_group>
+  <project_license>GPL-3.0-or-later</project_license>
+  <developer id="org.gnome">
+    <name>The GNOME Project</name>
+  </developer>
+  <provides>
+    <binary>nautilus</binary>
+    <library>libnautilus-extension.so.4</library>
+    <dbus type="user">org.freedesktop.FileManager1</dbus>
+    <dbus type="user">org.freedesktop.impl.portal.Request</dbus>
+    <dbus type="user">org.freedesktop.impl.portal.FileChooser</dbus>
+    <dbus type="user">org.gnome.Nautilus.FileOperations2</dbus>
+    <dbus type="user">org.gnome.Shell.SearchProvider2</dbus>
+  </provides>
+  <screenshots>
+    <screenshot type="default" environment="gnome">
+      <image>https://static.gnome.org/appdata/gnome-48/files/grid.png</image>
+      <caption>Grid View</caption>
+      <caption xml:lang="zh-Hant-TW">圖示檢視</caption>
+      <caption xml:lang="zh-Hans-CN">网格视图</caption>
+      <caption xml:lang="vi">Xem kiểu lưới</caption>
+      <caption xml:lang="uz-Latn">Jadval shaklida</caption>
+      <caption xml:lang="uk">Перегляд ґраткою</caption>
+      <caption xml:lang="ug">شادا كۆرۈنۈش</caption>
+      <caption xml:lang="tr">Tablo Görünümü</caption>
+      <caption xml:lang="th">มุมมองแบบตาราง</caption>
+      <caption xml:lang="sv">Rutnätsvy</caption>
+      <caption xml:lang="sr-Latn">Prikaži kao mrežu</caption>
+      <caption xml:lang="sr-Cyrl">Преглед мрежом</caption>
+      <caption xml:lang="sl">Mrežni pogled</caption>
+      <caption xml:lang="sk">Zobrazenie mriežky</caption>
+      <caption xml:lang="ru">Вид сеткой</caption>
+      <caption xml:lang="ro">Afișare tip grilă</caption>
+      <caption xml:lang="pt-BR">Visão em grade</caption>
+      <caption xml:lang="pt">Vista de grelha</caption>
+      <caption xml:lang="pl">Widok siatki</caption>
+      <caption xml:lang="pa">ਗਰਿੱਡ ਝਲਕ</caption>
+      <caption xml:lang="oc">Vista en grasilha</caption>
+      <caption xml:lang="nl">Rasterweergave</caption>
+      <caption xml:lang="ne">ग्रिड दृश्य</caption>
+      <caption xml:lang="nb">Rutenettvisning</caption>
+      <caption xml:lang="my">ဇယားမြင်ကွင်း</caption>
+      <caption xml:lang="lv">Režģa skats</caption>
+      <caption xml:lang="lt">Tinklelio rodinys</caption>
+      <caption xml:lang="lo">ມຸມມອງຕາຕະລາງ</caption>
+      <caption xml:lang="ko">격자 보기</caption>
+      <caption xml:lang="kk-Cyrl">Тор көрінісі</caption>
+      <caption xml:lang="ka">ბადის ხედი</caption>
+      <caption xml:lang="ja">グリッド表示</caption>
+      <caption xml:lang="it">Vista a griglia</caption>
+      <caption xml:lang="is">Reitasýn</caption>
+      <caption xml:lang="ie">Vise de grille</caption>
+      <caption xml:lang="id">Tilikan Kisi</caption>
+      <caption xml:lang="ia">Vista de grillia</caption>
+      <caption xml:lang="hu">Rácsnézet</caption>
+      <caption xml:lang="hr">Pogled mreže</caption>
+      <caption xml:lang="hi">ग्रिड दृश्य</caption>
+      <caption xml:lang="he">תצוגת רשת</caption>
+      <caption xml:lang="gl">Vista en grade</caption>
+      <caption xml:lang="fur">Viodude a gridele</caption>
+      <caption xml:lang="fr">Vue en grille</caption>
+      <caption xml:lang="fo">Netmynsturssýni</caption>
+      <caption xml:lang="fi">Ruudukkonäkymä</caption>
+      <caption xml:lang="fa">نمای شبکه‌ای</caption>
+      <caption xml:lang="eu">Sareta-ikuspegia</caption>
+      <caption xml:lang="es">Vista de rejilla</caption>
+      <caption xml:lang="eo">Krada vido</caption>
+      <caption xml:lang="en-GB">Grid View</caption>
+      <caption xml:lang="el">Προβολή πλέγματος</caption>
+      <caption xml:lang="de">Rasteransicht</caption>
+      <caption xml:lang="da">Gittervisning</caption>
+      <caption xml:lang="cs">Zobrazit v mřížce</caption>
+      <caption xml:lang="ca">Vista de graella</caption>
+      <caption xml:lang="bg">Изглед като решетка</caption>
+      <caption xml:lang="be-Cyrl">Рэжым сеткі</caption>
+      <caption xml:lang="ar">منظور الشبكة</caption>
+    </screenshot>
+    <screenshot environment="gnome">
+      <image>https://static.gnome.org/appdata/gnome-48/files/list.png</image>
+      <caption>List View</caption>
+      <caption xml:lang="zu">Isibonisi Sohlu</caption>
+      <caption xml:lang="zh-Hant-TW">列表檢視</caption>
+      <caption xml:lang="zh-Hant-HK">清單檢視</caption>
+      <caption xml:lang="zh-Hans-CN">列表视图</caption>
+      <caption xml:lang="yo">Òye Àtòjọ</caption>
+      <caption xml:lang="xh">Okubonakalayo Kuluhlu</caption>
+      <caption xml:lang="wa">Vuwe e djivêye</caption>
+      <caption xml:lang="vi">Xem kiểu liệt kê</caption>
+      <caption xml:lang="uz-Cyrl">Рўйхат кўриниши</caption>
+      <caption xml:lang="uz-Latn">Roʻyxat koʻrinishi</caption>
+      <caption xml:lang="uk">Перегляд списком</caption>
+      <caption xml:lang="ug">تىزىم كۆرۈنۈش</caption>
+      <caption xml:lang="tr">Liste Görünümü</caption>
+      <caption xml:lang="tk">List Görnöşi</caption>
+      <caption xml:lang="th">มุมมองแบบรายชื่อ</caption>
+      <caption xml:lang="tg">Намуди рӯйхат</caption>
+      <caption xml:lang="te">జాబితా వీక్షణం</caption>
+      <caption xml:lang="ta">பட்டியல் காட்சி</caption>
+      <caption xml:lang="sv">Listvy</caption>
+      <caption xml:lang="sr-Latn">Prikaži kao spisak</caption>
+      <caption xml:lang="sr-Cyrl-ije">Прегледај као списак</caption>
+      <caption xml:lang="sr-Cyrl">Преглед списком</caption>
+      <caption xml:lang="sq">Paraqitje në formë liste</caption>
+      <caption xml:lang="sl">Seznamski pogled</caption>
+      <caption xml:lang="sk">Zobrazenie zoznamu</caption>
+      <caption xml:lang="si">ලැයිස්තු දසුන</caption>
+      <caption xml:lang="ru">Вид списком</caption>
+      <caption xml:lang="ro">Afișare tip listă</caption>
+      <caption xml:lang="pt-BR">Visão em lista</caption>
+      <caption xml:lang="pt">Vista de lista</caption>
+      <caption xml:lang="ps">لړ کوت</caption>
+      <caption xml:lang="pl">Widok listy</caption>
+      <caption xml:lang="pa">ਲਿਸਟ ਝਲਕ</caption>
+      <caption xml:lang="or">ତାଲିକା ପ୍ରଦର୍ଶନ</caption>
+      <caption xml:lang="oc">Vista en lista</caption>
+      <caption xml:lang="nso">Tebelelo ya Lelokelelo</caption>
+      <caption xml:lang="nn">Vis som liste</caption>
+      <caption xml:lang="nl">Lijstweergave</caption>
+      <caption xml:lang="ne">सूची दृश्य</caption>
+      <caption xml:lang="nds">Listansicht</caption>
+      <caption xml:lang="nb">Listevisning</caption>
+      <caption xml:lang="my">စာစဉ်မြင်ကွင်း</caption>
+      <caption xml:lang="ms">Pandangan Senarai</caption>
+      <caption xml:lang="mr">यादी दाखवा</caption>
+      <caption xml:lang="mn-Cyrl">Жагсаалт хэлбэрээр харах</caption>
+      <caption xml:lang="ml">നാമാവലി കാഴ്ച</caption>
+      <caption xml:lang="mk">Поглед на листа</caption>
+      <caption xml:lang="mi">Tiro Rārangi</caption>
+      <caption xml:lang="mg">Fijerin'ny lisitra</caption>
+      <caption xml:lang="mai">सूची दृश्य</caption>
+      <caption xml:lang="lv">Saraksta skats</caption>
+      <caption xml:lang="lt">Sąrašo vaizdas</caption>
+      <caption xml:lang="lo">ມຸມມອງລາຍການ</caption>
+      <caption xml:lang="ln">Monisa liste</caption>
+      <caption xml:lang="li">Liesweergaaf</caption>
+      <caption xml:lang="ky">Тизме түрүндө көрүү</caption>
+      <caption xml:lang="ku">Nîşandana Lîsteyê</caption>
+      <caption xml:lang="ko">목록 보기</caption>
+      <caption xml:lang="kn">ಪಟ್ಟಿ ನೋಟ</caption>
+      <caption xml:lang="kk-Cyrl">Тізім көрінісі</caption>
+      <caption xml:lang="kab">Tamuɣli s tebdart</caption>
+      <caption xml:lang="ka">სიისებრი ხედი</caption>
+      <caption xml:lang="ja">一覧表示</caption>
+      <caption xml:lang="it">Vista ad elenco</caption>
+      <caption xml:lang="is">Listasýn</caption>
+      <caption xml:lang="ig">Ngosi ndesịta</caption>
+      <caption xml:lang="ie">Vise de liste</caption>
+      <caption xml:lang="id">Tampilan Tabel</caption>
+      <caption xml:lang="ia">Vista de lista</caption>
+      <caption xml:lang="hy">Ցանկի տեսաբերում</caption>
+      <caption xml:lang="hu">Listanézet</caption>
+      <caption xml:lang="hr">Pogled popisa</caption>
+      <caption xml:lang="hi">सूची दृश्य</caption>
+      <caption xml:lang="he">תצוגת רשימה</caption>
+      <caption xml:lang="ha-Latn">Kallo na Jeri</caption>
+      <caption xml:lang="gv">Reayrt Rolley</caption>
+      <caption xml:lang="gu">યાદી દૃશ્ય</caption>
+      <caption xml:lang="gl">Visualización en lista</caption>
+      <caption xml:lang="gd">Sealladh liosta</caption>
+      <caption xml:lang="ga">Amharc Liosta</caption>
+      <caption xml:lang="fur">Viodude a liste</caption>
+      <caption xml:lang="fr">Vue en liste</caption>
+      <caption xml:lang="fo">Listasýning</caption>
+      <caption xml:lang="fi">Luettelonäkymä</caption>
+      <caption xml:lang="fa">نمای سیاهه‌ای</caption>
+      <caption xml:lang="eu">Zerrenda-ikuspegia</caption>
+      <caption xml:lang="et">Nimekirjavaade</caption>
+      <caption xml:lang="es">Vista de lista</caption>
+      <caption xml:lang="eo">Lista vido</caption>
+      <caption xml:lang="en-shaw">𐑤𐑦𐑕𐑑 𐑝𐑿</caption>
+      <caption xml:lang="en-GB">List View</caption>
+      <caption xml:lang="en-CA">List View</caption>
+      <caption xml:lang="el">Προβολή λίστας</caption>
+      <caption xml:lang="dz">ཐོ་ཡིག་གི་མཐོང་སྣང་།</caption>
+      <caption xml:lang="de">Listenansicht</caption>
+      <caption xml:lang="da">Listevisning</caption>
+      <caption xml:lang="cy">Golwg Rhestr</caption>
+      <caption xml:lang="cs">Seznamové zobrazení</caption>
+      <caption xml:lang="crh">Liste Körünimi</caption>
+      <caption xml:lang="ckb">پیشاندانی لیستەیی</caption>
+      <caption xml:lang="ca-valencia">Vista de llista</caption>
+      <caption xml:lang="ca">Visualització de llista</caption>
+      <caption xml:lang="bs-Latn">Pregled liste</caption>
+      <caption xml:lang="br">Gwel dre roll</caption>
+      <caption xml:lang="bo">ཐོ་འགོད་ལྟ་ཀློག</caption>
+      <caption xml:lang="bn-IN">তালিকা অনুসারে প্রদর্শন</caption>
+      <caption xml:lang="bn">তালিকা অনুসারে প্রদর্শন</caption>
+      <caption xml:lang="bg">Изглед като списък</caption>
+      <caption xml:lang="be-Latn">Vyhlad śpisu</caption>
+      <caption xml:lang="be-Cyrl">Рэжым спіса</caption>
+      <caption xml:lang="az">Sıra Görünüşü</caption>
+      <caption xml:lang="ast">Vista de llista</caption>
+      <caption xml:lang="as">তালিকা অনুসৰি প্ৰদৰ্শন</caption>
+      <caption xml:lang="ar">منظور القائمة</caption>
+      <caption xml:lang="an">Vista de lista</caption>
+      <caption xml:lang="am">ዝርዝር ዕይታ</caption>
+      <caption xml:lang="af">Lysaangesig</caption>
+      <caption xml:lang="ab">Ахьӡынҵа аԥшра аҭаны</caption>
+    </screenshot>
+    <screenshot environment="gnome">
+      <image>https://static.gnome.org/appdata/gnome-48/files/search.png</image>
+      <caption>Search</caption>
+      <caption xml:lang="zh-Hant-TW">搜尋</caption>
+      <caption xml:lang="zh-Hant-HK">搜尋</caption>
+      <caption xml:lang="zh-Hans-CN">搜索</caption>
+      <caption xml:lang="vi">Tìm kiếm</caption>
+      <caption xml:lang="uz-Cyrl">Қидириш</caption>
+      <caption xml:lang="uz-Latn">Qidirish</caption>
+      <caption xml:lang="uk">Пошук</caption>
+      <caption xml:lang="ug">ئىزدە</caption>
+      <caption xml:lang="tr">Arama</caption>
+      <caption xml:lang="th">ค้นหา</caption>
+      <caption xml:lang="tg">Ҷустуҷӯ</caption>
+      <caption xml:lang="te">వెతుకు</caption>
+      <caption xml:lang="ta">தேடு</caption>
+      <caption xml:lang="sv">Sök</caption>
+      <caption xml:lang="sr-Latn">Pretraga</caption>
+      <caption xml:lang="sr-Cyrl">Претрага</caption>
+      <caption xml:lang="sq">Kërko</caption>
+      <caption xml:lang="sl">Iskanje</caption>
+      <caption xml:lang="sk">Vyhľadať</caption>
+      <caption xml:lang="si">සොයන්න</caption>
+      <caption xml:lang="ru">Поиск</caption>
+      <caption xml:lang="ro">Caută</caption>
+      <caption xml:lang="pt-BR">Pesquisa</caption>
+      <caption xml:lang="pt">Procurar</caption>
+      <caption xml:lang="ps">لټون</caption>
+      <caption xml:lang="pl">Wyszukiwanie</caption>
+      <caption xml:lang="pa">ਖੋਜ</caption>
+      <caption xml:lang="or">ଖୋଜନ୍ତୁ</caption>
+      <caption xml:lang="oc">Recercar</caption>
+      <caption xml:lang="nn">Søk</caption>
+      <caption xml:lang="nl">Zoekopdracht</caption>
+      <caption xml:lang="ne">खोजी गर्नुहोस्</caption>
+      <caption xml:lang="nds">Sök</caption>
+      <caption xml:lang="nb">Søk</caption>
+      <caption xml:lang="my">ရှာဖွေရေး</caption>
+      <caption xml:lang="ms">Cari</caption>
+      <caption xml:lang="mr">शोधा</caption>
+      <caption xml:lang="ml">തിരയുക</caption>
+      <caption xml:lang="mk">Пребарување</caption>
+      <caption xml:lang="mjw">Kiri</caption>
+      <caption xml:lang="mg">Karohy</caption>
+      <caption xml:lang="mai">खोजू</caption>
+      <caption xml:lang="lv">Meklēt</caption>
+      <caption xml:lang="lt">Ieškoti</caption>
+      <caption xml:lang="lo">ຄົ້ນຫາ</caption>
+      <caption xml:lang="ln">Boluki</caption>
+      <caption xml:lang="ky">Издөө</caption>
+      <caption xml:lang="ku">Lêgerîn</caption>
+      <caption xml:lang="ko">검색</caption>
+      <caption xml:lang="kn">ಹುಡುಕು</caption>
+      <caption xml:lang="km">ស្វែងរក</caption>
+      <caption xml:lang="kk-Cyrl">Іздеу</caption>
+      <caption xml:lang="kab">Nadi</caption>
+      <caption xml:lang="ka">ძებნა</caption>
+      <caption xml:lang="ja">検索</caption>
+      <caption xml:lang="it">Cerca</caption>
+      <caption xml:lang="is">Leita</caption>
+      <caption xml:lang="io">Serchez</caption>
+      <caption xml:lang="ie">Serchar</caption>
+      <caption xml:lang="id">Cari</caption>
+      <caption xml:lang="hu">Keresés</caption>
+      <caption xml:lang="hr">Pretraga</caption>
+      <caption xml:lang="hi">खोजें</caption>
+      <caption xml:lang="he">חיפוש</caption>
+      <caption xml:lang="gv">Shirrey</caption>
+      <caption xml:lang="gu">શોધો</caption>
+      <caption xml:lang="gl">Buscar</caption>
+      <caption xml:lang="gd">Lorg</caption>
+      <caption xml:lang="ga">Cuardaigh</caption>
+      <caption xml:lang="fy">Sykje</caption>
+      <caption xml:lang="fur">Cîr</caption>
+      <caption xml:lang="fr">Recherche</caption>
+      <caption xml:lang="fo">Leita</caption>
+      <caption xml:lang="fi">Etsi</caption>
+      <caption xml:lang="fa">جست‌وجو</caption>
+      <caption xml:lang="eu">Bilatu</caption>
+      <caption xml:lang="et">Otsing</caption>
+      <caption xml:lang="es">Buscar</caption>
+      <caption xml:lang="eo">Serĉi</caption>
+      <caption xml:lang="en-shaw">𐑕𐑻𐑗</caption>
+      <caption xml:lang="en-GB">Search</caption>
+      <caption xml:lang="en-CA">Search</caption>
+      <caption xml:lang="el">Αναζήτηση</caption>
+      <caption xml:lang="dz">འཚོལ་ཞིབ།</caption>
+      <caption xml:lang="de">Suchen</caption>
+      <caption xml:lang="da">Søg</caption>
+      <caption xml:lang="cy">Chwilio</caption>
+      <caption xml:lang="cs">Hledat</caption>
+      <caption xml:lang="crh">Qıdıruv</caption>
+      <caption xml:lang="ckb">گەڕان</caption>
+      <caption xml:lang="ca-valencia">Busca</caption>
+      <caption xml:lang="ca">Cerca</caption>
+      <caption xml:lang="bs-Latn">Pretraga</caption>
+      <caption xml:lang="br">Klask</caption>
+      <caption xml:lang="bo">འཚོལ་བཤེར</caption>
+      <caption xml:lang="bn-IN">অনুসন্ধান</caption>
+      <caption xml:lang="bn">অনুসন্ধান</caption>
+      <caption xml:lang="bg">Търсене</caption>
+      <caption xml:lang="be-Latn">Pošuk</caption>
+      <caption xml:lang="be-Cyrl">Пошук</caption>
+      <caption xml:lang="ast">Guetar</caption>
+      <caption xml:lang="as">সন্ধান</caption>
+      <caption xml:lang="ar">ابحث</caption>
+      <caption xml:lang="an">Mirar</caption>
+      <caption xml:lang="af">Soek</caption>
+    </screenshot>
+    <screenshot environment="gnome">
+      <image>https://static.gnome.org/appdata/gnome-48/files/thumbnails.png</image>
+      <caption>Selection of Multiple Files</caption>
+      <caption xml:lang="zh-Hant-TW">多檔案選取</caption>
+      <caption xml:lang="zh-Hans-CN">多文件选择</caption>
+      <caption xml:lang="vi">Vùng chọn nhiều tập tin</caption>
+      <caption xml:lang="uk">Вибір декількох файлів</caption>
+      <caption xml:lang="ug">كۆپ ھۆججەت تاللاش</caption>
+      <caption xml:lang="tr">Çoklu Dosya Seçimi</caption>
+      <caption xml:lang="th">การเลือกหลายไฟล์</caption>
+      <caption xml:lang="sv">Markering av flera filer</caption>
+      <caption xml:lang="sr-Latn">Izbor više datoteka</caption>
+      <caption xml:lang="sr-Cyrl">Избор више датотека</caption>
+      <caption xml:lang="sl">Izbor več datotek</caption>
+      <caption xml:lang="sk">Výber viacerých súborov</caption>
+      <caption xml:lang="ru">Выбор нескольких файлов</caption>
+      <caption xml:lang="ro">Selecția mai multor fișiere</caption>
+      <caption xml:lang="pt-BR">Seleção de múltiplos arquivos</caption>
+      <caption xml:lang="pt">Seleção de múltiplos ficheiros</caption>
+      <caption xml:lang="pl">Zaznaczenie wielu plików</caption>
+      <caption xml:lang="oc">Seleccion de mantun fichièr</caption>
+      <caption xml:lang="nl">Selectie van meerdere bestanden</caption>
+      <caption xml:lang="nb">Valg av flere filer</caption>
+      <caption xml:lang="my">ဖိုင်အများအပြားရွေးချယ်ခြင်း</caption>
+      <caption xml:lang="lt">Daugelio failų žymėjimas</caption>
+      <caption xml:lang="lo">ການເລືອກຫຼາຍໄຟລ໌</caption>
+      <caption xml:lang="ko">여러 파일 선택</caption>
+      <caption xml:lang="kk-Cyrl">Бірнеше файлды таңдау</caption>
+      <caption xml:lang="kab">Afran n waṭas n ifuyla</caption>
+      <caption xml:lang="ka">ერთზე მეტი ფაილის მონიშვნა</caption>
+      <caption xml:lang="ja">複数ファイルの選択</caption>
+      <caption xml:lang="it">Selezione di file multipli</caption>
+      <caption xml:lang="is">Margar skrár valdar</caption>
+      <caption xml:lang="id">Pemilihan Beberapa Berkas</caption>
+      <caption xml:lang="hu">Több fájl kijelölése</caption>
+      <caption xml:lang="he">בחירת קבצים מרובה</caption>
+      <caption xml:lang="gl">Seleccione varios ficheiros</caption>
+      <caption xml:lang="fur">Selezion di plui files</caption>
+      <caption xml:lang="fr">Sélection de plusieurs fichiers</caption>
+      <caption xml:lang="fi">Useiden tiedostojen valinta</caption>
+      <caption xml:lang="fa">گزینشی از چندین پرونده</caption>
+      <caption xml:lang="eu">Fitxategi anitzen hautapena</caption>
+      <caption xml:lang="es">Selección de varios archivos</caption>
+      <caption xml:lang="eo">Elekto de pluraj dosieroj</caption>
+      <caption xml:lang="en-GB">Selection of Multiple Files</caption>
+      <caption xml:lang="el">Επιλογή πολλαπλών αρχείων</caption>
+      <caption xml:lang="de">Auswahl mehrerer Dateien</caption>
+      <caption xml:lang="da">Markering af flere filer</caption>
+      <caption xml:lang="cs">Výběr více souborů</caption>
+      <caption xml:lang="ca">Selecció de diversos fitxers</caption>
+      <caption xml:lang="bg">Избор на няколко файла</caption>
+      <caption xml:lang="be-Cyrl">Выбар некалькіх файлаў</caption>
+      <caption xml:lang="ar">اختيار عدة ملفات</caption>
+    </screenshot>
+  </screenshots>
+  <branding>
+    <color type="primary" scheme_preference="light">#99c1f1</color>
+    <color type="primary" scheme_preference="dark">#1a5fb4</color>
+  </branding>
+  <translation type="gettext">nautilus</translation>
+  <kudos>
+    <kudo>HiDpiIcon</kudo>
+    <kudo>ModernToolkit</kudo>
+    <kudo>Notifications</kudo>
+    <kudo>SearchProvider</kudo>
+  </kudos>
+  <supports>
+    <control>touch</control>
+    <control>tablet</control>
+    <control>keyboard</control>
+    <control>pointing</control>
+    <internet>offline-only</internet>
+  </supports>
+  <requires>
+    <display_length>360</display_length>
+  </requires>
+  <compulsory_for_desktop>GNOME</compulsory_for_desktop>
+  <content_rating type="oars-1.1"/>
+</component>

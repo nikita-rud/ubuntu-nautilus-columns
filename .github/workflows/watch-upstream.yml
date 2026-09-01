@@ -1,0 +1,123 @@
+name: watch-upstream
+
+# Раз в неделю смотрит, не вышла ли новая версия nautilus в Ubuntu, и если
+# вышла — переносит наши коммиты на неё. Получилось чисто — публикует новую
+# сборку; не получилось — заводит issue, дальше нужен человек.
+
+on:
+  schedule:
+    - cron: '17 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  watch:
+    name: Проверить Ubuntu
+    runs-on: ubuntu-latest
+    container: ubuntu:26.04
+    outputs:
+      rebased: ${{ steps.rebase.outputs.rebased }}
+      version: ${{ steps.rebase.outputs.version }}
+    steps:
+      - name: Инструменты
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            git ca-certificates dpkg-dev rsync
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Доверять каталогу
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Источники исходников
+        run: |
+          cat > /etc/apt/sources.list.d/ubuntu-src.sources <<'EOF'
+          Types: deb-src
+          URIs: http://archive.ubuntu.com/ubuntu/
+          Suites: resolute resolute-updates
+          Components: main restricted universe multiverse
+          Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
+          EOF
+          apt-get update
+
+      - name: Настройки git
+        run: |
+          git config user.name "nautilus-columns bot"
+          git config user.email "nickruddy707@gmail.com"
+
+      - name: Перенести на свежий исходник
+        id: rebase
+        run: |
+          set +e
+          out=$(./tools/rebase-onto-ubuntu.sh 2>&1)
+          code=$?
+          set -e
+          echo "$out"
+
+          {
+            echo 'log<<OUTPUT_EOF'
+            echo "$out"
+            echo 'OUTPUT_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+          version=$(echo "$out" | sed -n 's/^\(REBASED\|CONFLICT\) //p')
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+          if [ "$code" = 0 ] && echo "$out" | grep -q '^REBASED'; then
+            echo "rebased=true" >> "$GITHUB_OUTPUT"
+          elif [ "$code" = 2 ]; then
+            echo "rebased=conflict" >> "$GITHUB_OUTPUT"
+          else
+            echo "rebased=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Отправить перенесённое
+        if: steps.rebase.outputs.rebased == 'true'
+        run: |
+          git push --force-with-lease origin main
+          git push origin ubuntu
+          git push origin --tags
+
+      - name: Завести issue при конфликте
+        if: steps.rebase.outputs.rebased == 'conflict'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.rebase.outputs.version }}
+        run: |
+          apt-get install -y gh
+          gh issue create \
+            --title "Перенос на nautilus $VERSION требует ручной правки" \
+            --body "Автоматический \`git rebase --onto\` на исходник Ubuntu \`$VERSION\` не прошёл.
+
+          Это ожидаемо, когда GNOME переписывает то, во что мы встраиваемся:
+          \`nautilus-list-base.c\`, \`nautilus-files-view.c\`, \`nautilus-window-slot.c\`.
+
+          Как разобраться вручную:
+
+          \`\`\`
+          git fetch origin
+          ./tools/rebase-onto-ubuntu.sh   # покажет конфликт
+          # разрешить, затем:
+          git rebase --continue
+          git push --force-with-lease origin main
+          git push origin ubuntu --tags
+          \`\`\`
+
+          После этого сборка запустится сама."
+
+  build:
+    name: Пересобрать
+    needs: watch
+    if: needs.watch.outputs.rebased == 'true'
+    uses: ./.github/workflows/build.yml
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    secrets: inherit
