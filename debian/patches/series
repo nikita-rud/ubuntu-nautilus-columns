@@ -1,0 +1,11 @@
+debian/Revert-test-Disable-localsearch-tracker-tests.patch
+04_suppress_umount_in_ltsp.patch
+appstream-compulsory.patch
+fallback-to-gexiv-0.14.2.patch
+ubuntu/unity_launcher_support.patch
+ubuntu/unity_icon_color.patch
+ubuntu/ubuntu_backspace_behaviour.patch
+ubuntu/shell-search-provider-implement-XUbuntuCancel-to-request-.patch
+ubuntu/nautilus-sendto.patch
+ubuntu/files-view-Add-xdg-terminal-exec-action.patch
+ubuntu/test-Disable-portal-file-chooser-test.patch

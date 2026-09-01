@@ -1,0 +1,21 @@
+From: Jeremy Bicha <jbicha@ubuntu.com>
+Date: Fri, 13 Apr 2018 20:57:30 +0200
+Subject: Set nautilus as unremovable in GNOME Software
+
+for GNOME users since it is a depends of ubuntu-desktop
+and gnome-software does not warn about uninstalling dependent packages
+---
+ data/org.gnome.Nautilus.metainfo.xml.in.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/data/org.gnome.Nautilus.metainfo.xml.in.in b/data/org.gnome.Nautilus.metainfo.xml.in.in
+index 7db4198..ab8e0ec 100644
+--- a/data/org.gnome.Nautilus.metainfo.xml.in.in
++++ b/data/org.gnome.Nautilus.metainfo.xml.in.in
+@@ -91,5 +91,6 @@
+   <requires>
+     <display_length>360</display_length>
+   </requires>
++  <compulsory_for_desktop>GNOME</compulsory_for_desktop>
+   <content_rating type="oars-1.1" />
+ </component>

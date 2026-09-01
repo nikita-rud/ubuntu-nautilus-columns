@@ -1,0 +1,54 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export DEB_LDFLAGS_MAINT_APPEND = -Wl,-O1 -Wl,-z,defs
+export DPKG_GENSYMBOLS_CHECK_LEVEL = 4
+
+ifeq ($(filter nocheck,$(DEB_BUILD_OPTIONS)),)
+ENABLE_TESTS := -Dtests=all
+else
+ENABLE_TESTS := -Dtests=none
+endif
+
+ifeq ($(DEB_HOST_ARCH_OS),linux)
+ENABLE_SELINUX := -Dselinux=true
+else
+ENABLE_SELINUX := -Dselinux=false
+endif
+
+ifeq ($(shell dpkg-vendor --is Ubuntu && echo yes), yes)
+# Not in main repository
+ENABLE_CLOUD += -Dcloudproviders=false
+else
+ENABLE_CLOUD += -Dcloudproviders=true
+endif
+
+# test-files-view needs to write to dconf
+export HOME=$(CURDIR)/debian/build
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- \
+		-Ddocs=true \
+		-Dunity-launcher=true \
+		-Dxdg-terminal-exec=true \
+		$(ENABLE_TESTS) \
+		$(ENABLE_CLOUD) \
+		$(ENABLE_SELINUX)
+
+override_dh_auto_test:
+	touch $(CURDIR)/debian/.debhelper/generated/_source/home/.gtk-bookmarks
+	GTK_A11Y=none GVFS_REMOTE_VOLUME_MONITOR_IGNORE=1 dbus-run-session -- xvfb-run --auto-servernum dh_auto_test -- --wrapper $(CURDIR)/debian/run-with-gvfsd
+
+override_dh_install:
+	dh_install
+	mkdir -p debian/nautilus/usr/share/apport/package-hooks
+	sed 's/DEB_HOST_MULTIARCH/$(DEB_HOST_MULTIARCH)/g' debian/source_nautilus.py.in > debian/nautilus/usr/share/apport/package-hooks/source_nautilus.py
+
+# Skip. We only use dh_gnome for dh_translations for Ubuntu
+override_dh_gnome:
+
+execute_after_dh_clean:
+	rm -rf $(CURDIR)/debian/build

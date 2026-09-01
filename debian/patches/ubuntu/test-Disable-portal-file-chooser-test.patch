@@ -1,0 +1,30 @@
+From: Charles <charles05@canonical.com>
+Date: Tue, 3 Mar 2026 13:01:35 +0000
+Subject: tests: Disable portal-file-chooser test
+
+This test is flaky on slower architectures
+
+Bug-Upstream: https://gitlab.gnome.org/GNOME/nautilus/-/issues/4151
+Forwarded: not-needed
+---
+ test/automated/display/meson.build | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/test/automated/display/meson.build b/test/automated/display/meson.build
+index 543f537..091049e 100644
+--- a/test/automated/display/meson.build
++++ b/test/automated/display/meson.build
+@@ -9,9 +9,10 @@ tests = {
+   'test-sidebar': {
+     'is_parallel' : false,
+   },
+-  'test-portal-file-chooser': {
+-    'is_parallel' : false,
+-  },
++  # Fails on slow architectures
++  #'test-portal-file-chooser': {
++  #  'is_parallel' : false,
++  #},
+ }
+ 
+ foreach test_name, extra_args : tests

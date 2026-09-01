@@ -1,0 +1,29 @@
+From: =?utf-8?q?Jeremy_B=C3=ADcha?= <jeremy.bicha@canonical.com>
+Date: Wed, 23 Feb 2022 08:06:34 -0500
+Subject: Restore backspace for going to parent folder
+
+This restores the behaviour from nautilus <= 3.4.
+---
+ src/nautilus-window-slot.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/nautilus-window-slot.c b/src/nautilus-window-slot.c
+index 9822426..fd3c003 100644
+--- a/src/nautilus-window-slot.c
++++ b/src/nautilus-window-slot.c
+@@ -1242,6 +1242,7 @@ const GActionEntry slot_entries[] =
+     { .name = "forward", .activate = action_forward },
+     { .name = "back-n", .activate = action_back_n, .parameter_type = "u" },
+     { .name = "forward-n", .activate = action_forward_n, .parameter_type = "u" },
++    { .name = "backspaceup", .activate = action_up },
+     { .name = "up", .activate = action_up },
+     { .name = "down", .activate = action_down },
+     {
+@@ -1375,6 +1376,7 @@ nautilus_window_slot_init (NautilusWindowSlot *self)
+     ADD_SHORTCUT_FOR_ACTION (self->shortcuts, "slot.search-global", "<control><shift>f");
+     ADD_SHORTCUT_FOR_ACTION (self->shortcuts, "slot.reload", "F5|<ctrl>r|Refresh|Reload");
+     ADD_SHORTCUT_FOR_ACTION (self->shortcuts, "slot.stop", "Stop");
++    ADD_SHORTCUT_FOR_ACTION (self->shortcuts, "slot.up", "BackSpace");
+     ADD_SHORTCUT_FOR_ACTION (self->shortcuts, "slot.up", "<alt>Up");
+     ADD_SHORTCUT_FOR_ACTION (self->shortcuts, "slot.down", "<alt>Down");
+     ADD_SHORTCUT_FOR_ACTION (self->shortcuts, "slot.bookmark-current-directory", "<control>d|AddFavorite");

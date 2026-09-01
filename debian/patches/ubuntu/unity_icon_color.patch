@@ -1,0 +1,21 @@
+From: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Date: Fri, 20 Jul 2018 03:25:37 +0200
+Subject: specify a background color for the unity launcher icon
+
+Bug: https://launchpad.net/bugs/1081691
+---
+ data/org.gnome.Nautilus.desktop.in.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/data/org.gnome.Nautilus.desktop.in.in b/data/org.gnome.Nautilus.desktop.in.in
+index 9cee145..26f688a 100644
+--- a/data/org.gnome.Nautilus.desktop.in.in
++++ b/data/org.gnome.Nautilus.desktop.in.in
+@@ -15,6 +15,7 @@ MimeType=inode/directory;application/x-7z-compressed;application/x-7z-compressed
+ X-GNOME-UsesNotifications=true
+ Actions=new-window;
+ X-Purism-FormFactor=Workstation;Mobile;
++X-Unity-IconBackgroundColor=#af4853
+ 
+ [Desktop Action new-window]
+ Name=New Window

@@ -1,0 +1,331 @@
+From: Alessandro Astone <alessandro.astone@canonical.com>
+Date: Wed, 25 Jun 2025 16:57:47 +0200
+Subject: files-view: Add xdg-terminal-exec action
+
+If enabled, this replaces "Open in Console" with a generic "Open in Terminal"
+that launches the user's default terminal as per the xdg-terminal-exec spec.
+This is only suitable for when building Nautilus as a host-native application.
+
+Forwarded: https://gitlab.gnome.org/GNOME/nautilus/-/merge_requests/1781
+---
+ meson.build                                        |   1 +
+ meson_options.txt                                  |  11 +++
+ src/nautilus-dbus-launcher.c                       |   5 +-
+ src/nautilus-dbus-launcher.h                       |   4 +
+ src/nautilus-files-view.c                          | 106 ++++++++++++++++++---
+ .../menu/nautilus-files-view-context-menus.ui      |  10 ++
+ .../menu/nautilus-pathbar-context-menu.ui          |   5 +
+ 7 files changed, 129 insertions(+), 13 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index babf20c..75a6585 100644
+--- a/meson.build
++++ b/meson.build
+@@ -179,6 +179,7 @@ conf.set_quoted('VERSION', version_string)
+ conf.set('HAVE_UNITY', get_option('unity-launcher'))
+ conf.set('HAVE_SELINUX', selinux.found())
+ conf.set('HAVE_CLOUDPROVIDERS', cloudproviders.found())
++conf.set('XDG_TERMINAL_EXEC', get_option('xdg-terminal-exec'))
+ 
+ if gtk_x11.found()
+   conf.set('HAVE_GTK_X11', 1)
+diff --git a/meson_options.txt b/meson_options.txt
+index b3121e5..694fbd1 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -51,6 +51,17 @@ option(
+   deprecated: {'true': 'enabled', 'false': 'disabled'},
+   description: 'Enable the cloudproviders support',
+ )
++option(
++  'xdg-terminal-exec',
++  type: 'boolean',
++  value: false,
++  description: 'Enable the xdg-terminal-exec integration. ' +
++               'If enabled, this replaces "Open in Console" with a ' +
++               'generic "Open in terminal" that launches the user\'s ' +
++               'default terminal as per the xdg-terminal-exec spec. ' +
++               'This is only suitable for when building Nautilus as a ' +
++               'host-native application.',
++)
+ ################
+ # End features #
+ ################
+diff --git a/src/nautilus-dbus-launcher.c b/src/nautilus-dbus-launcher.c
+index 5fce3d3..bed3d3c 100644
+--- a/src/nautilus-dbus-launcher.c
++++ b/src/nautilus-dbus-launcher.c
+@@ -8,6 +8,7 @@
+ 
+ #include <glib/gi18n.h>
+ 
++#include "config.h"
+ #include "nautilus-file.h"
+ #include "nautilus-ui-utilities.h"
+ 
+@@ -268,7 +269,6 @@ nautilus_dbus_launcher_init (NautilusDBusLauncher *self)
+ 
+     nautilus_dbus_launcher_data_init (self, NAUTILUS_DBUS_LAUNCHER_SETTINGS);
+     nautilus_dbus_launcher_data_init (self, NAUTILUS_DBUS_LAUNCHER_DISKS);
+-    nautilus_dbus_launcher_data_init (self, NAUTILUS_DBUS_LAUNCHER_CONSOLE);
+ 
+     g_dbus_proxy_new_for_bus (G_BUS_TYPE_SESSION, G_DBUS_PROXY_FLAGS_NONE, NULL,
+                               "org.freedesktop.DBus",
+@@ -284,7 +284,10 @@ nautilus_dbus_launcher_init (NautilusDBusLauncher *self)
+                                          "org.gnome.DiskUtility", "/org/gnome/DiskUtility",
+                                          "org.gtk.Application");
+ 
++#ifndef XDG_TERMINAL_EXEC
++    nautilus_dbus_launcher_data_init (self, NAUTILUS_DBUS_LAUNCHER_CONSOLE);
+     nautilus_dbus_launcher_create_proxy (self->data[NAUTILUS_DBUS_LAUNCHER_CONSOLE],
+                                          "org.gnome.Console", "/org/gnome/Console",
+                                          "org.freedesktop.Application");
++#endif
+ }
+diff --git a/src/nautilus-dbus-launcher.h b/src/nautilus-dbus-launcher.h
+index 46a2f56..cf9ebc5 100644
+--- a/src/nautilus-dbus-launcher.h
++++ b/src/nautilus-dbus-launcher.h
+@@ -11,6 +11,8 @@
+ #include <glib.h>
+ #include <gtk/gtk.h>
+ 
++#include "config.h"
++
+ #define NAUTILUS_TYPE_DBUS_LAUNCHER (nautilus_dbus_launcher_get_type())
+ 
+ G_DECLARE_FINAL_TYPE (NautilusDBusLauncher, nautilus_dbus_launcher, NAUTILUS, DBUS_LAUNCHER, GObject)
+@@ -20,7 +22,9 @@ typedef enum {
+     NAUTILUS_DBUS_APP_0,
+     NAUTILUS_DBUS_LAUNCHER_SETTINGS,
+     NAUTILUS_DBUS_LAUNCHER_DISKS,
++#ifndef XDG_TERMINAL_EXEC
+     NAUTILUS_DBUS_LAUNCHER_CONSOLE,
++#endif
+     NAUTILUS_DBUS_LAUNCHER_N_APPS
+ } NautilusDBusLauncherApp;
+ 
+diff --git a/src/nautilus-files-view.c b/src/nautilus-files-view.c
+index baed98a..1143ad2 100644
+--- a/src/nautilus-files-view.c
++++ b/src/nautilus-files-view.c
+@@ -139,6 +139,10 @@ static int scripts_directory_uri_length;
+ 
+ static GHashTable *script_accels = NULL;
+ 
++#ifdef XDG_TERMINAL_EXEC
++static GAppInfo *xdg_terminal_exec_app = NULL;
++#endif
++
+ struct _NautilusFilesView
+ {
+     AdwBin parent;
+@@ -2416,6 +2420,32 @@ action_new_folder_with_selection (GSimpleAction *action,
+     nautilus_files_view_new_folder (NAUTILUS_FILES_VIEW (user_data), TRUE);
+ }
+ 
++#ifdef XDG_TERMINAL_EXEC
++static void
++real_open_xdg_terminal_exec (NautilusFile      *file,
++                             NautilusFilesView *view)
++{
++    g_autoptr (GdkAppLaunchContext) context = NULL;
++    g_autoptr (GError) error = NULL;
++    g_autoptr (GList) list = NULL;
++    GdkDisplay *display;
++    GFile *gfile;
++
++    g_return_if_fail (xdg_terminal_exec_app);
++
++    gfile = nautilus_file_get_location (file);
++    list = g_list_append (list, gfile);
++
++    display = gtk_widget_get_display (GTK_WIDGET (view));
++    context = gdk_display_get_app_launch_context (display);
++    g_app_info_launch (xdg_terminal_exec_app, list, G_APP_LAUNCH_CONTEXT (context), &error);
++
++    if (G_UNLIKELY (error))
++    {
++        g_critical ("Failed to launch terminal: %s", error->message);
++    }
++}
++#else
+ static void
+ real_open_console (NautilusFile      *file,
+                    NautilusFilesView *view)
+@@ -2431,11 +2461,12 @@ real_open_console (NautilusFile      *file,
+                                  "Open",
+                                  parameters, GTK_WINDOW (window));
+ }
++#endif
+ 
+ static void
+-action_open_console (GSimpleAction *action,
+-                     GVariant      *state,
+-                     gpointer       user_data)
++action_open_terminal (GSimpleAction *action,
++                      GVariant      *state,
++                      gpointer       user_data)
+ {
+     NautilusFilesView *self = user_data;
+     g_autolist (NautilusFile) selection = nautilus_files_view_get_selection (self);
+@@ -2443,18 +2474,26 @@ action_open_console (GSimpleAction *action,
+ 
+     g_return_if_fail (is_single_selection);
+ 
++#ifdef XDG_TERMINAL_EXEC
++    real_open_xdg_terminal_exec (NAUTILUS_FILE (selection->data), self);
++#else
+     real_open_console (NAUTILUS_FILE (selection->data), self);
++#endif
+ }
+ 
+ static void
+-action_current_dir_open_console (GSimpleAction *action,
+-                                 GVariant      *state,
+-                                 gpointer       user_data)
++action_current_dir_open_terminal (GSimpleAction *action,
++                                  GVariant      *state,
++                                  gpointer       user_data)
+ {
+     g_return_if_fail (NAUTILUS_IS_FILES_VIEW (user_data));
+ 
+     NautilusFilesView *self = user_data;
++#ifdef XDG_TERMINAL_EXEC
++    real_open_xdg_terminal_exec (self->directory_as_file, self);
++#else
+     real_open_console (self->directory_as_file, self);
++#endif
+ }
+ 
+ static void
+@@ -6886,8 +6925,10 @@ const GActionEntry view_entries[] =
+     { .name = "extract-to", .activate = action_extract_to },
+     { .name = "compress", .activate = action_compress },
+     { .name = "send-email", .activate = action_send_email },
+-    { .name = "console", .activate = action_open_console },
+-    { .name = "current-directory-console", .activate = action_current_dir_open_console },
++    { .name = "xdg-terminal", .activate = action_open_terminal },
++    { .name = "console", .activate = action_open_terminal },
++    { .name = "current-directory-xdg-terminal", .activate = action_current_dir_open_terminal },
++    { .name = "current-directory-console", .activate = action_current_dir_open_terminal },
+     { .name = "properties", .activate = action_properties},
+     { .name = "current-directory-properties", .activate = action_current_dir_properties},
+     { .name = "run-in-terminal", .activate = action_run_in_terminal },
+@@ -7639,19 +7680,56 @@ nautilus_files_view_update_actions_state (NautilusFilesView *self)
+                                  !selection_contains_starred &&
+                                  can_paste_files_into);
+ 
++    gboolean enable_xdg_terminal_exec;
++    gboolean enable_console;
++
++#ifdef XDG_TERMINAL_EXEC
++    enable_console = FALSE;
++    enable_xdg_terminal_exec = !!g_find_program_in_path ("xdg-terminal-exec");
++    if (enable_xdg_terminal_exec)
++    {
++        g_autoptr (GError) error = NULL;
++        xdg_terminal_exec_app =
++            g_app_info_create_from_commandline ("xdg-terminal-exec --dir=%f",
++                                                NULL,
++                                                G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION,
++                                                &error);
++        if (!xdg_terminal_exec_app)
++        {
++            g_warning ("Could not initialize xdg-terminal-exec: %s", error->message);
++            enable_xdg_terminal_exec = FALSE;
++        }
++    }
++#else
++    enable_xdg_terminal_exec = FALSE;
++    enable_console = nautilus_dbus_launcher_is_available (nautilus_dbus_launcher_get (),
++                                                          NAUTILUS_DBUS_LAUNCHER_CONSOLE);
++#endif
++
++    action = g_action_map_lookup_action (G_ACTION_MAP (view_action_group),
++                                         "xdg-terminal");
++    g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
++                                 mode == NAUTILUS_MODE_BROWSE &&
++                                 list_len_is_one (selection) && nautilus_file_is_directory (selection->data) &&
++                                 enable_xdg_terminal_exec);
++    action = g_action_map_lookup_action (G_ACTION_MAP (view_action_group),
++                                         "current-directory-xdg-terminal");
++    g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
++                                 mode == NAUTILUS_MODE_BROWSE &&
++                                 enable_xdg_terminal_exec);
++
+     action = g_action_map_lookup_action (G_ACTION_MAP (view_action_group),
+                                          "console");
+     g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+                                  mode == NAUTILUS_MODE_BROWSE &&
+                                  list_len_is_one (selection) && nautilus_file_is_directory (selection->data) &&
+-                                 nautilus_dbus_launcher_is_available (nautilus_dbus_launcher_get (),
+-                                                                      NAUTILUS_DBUS_LAUNCHER_CONSOLE));
++                                 enable_console);
+     action = g_action_map_lookup_action (G_ACTION_MAP (view_action_group),
+                                          "current-directory-console");
+     g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+                                  mode == NAUTILUS_MODE_BROWSE &&
+-                                 nautilus_dbus_launcher_is_available (nautilus_dbus_launcher_get (),
+-                                                                      NAUTILUS_DBUS_LAUNCHER_CONSOLE));
++                                 enable_console);
++
+     action = g_action_map_lookup_action (G_ACTION_MAP (view_action_group),
+                                          "properties");
+     g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+@@ -9596,7 +9674,11 @@ nautilus_files_view_init (NautilusFilesView *self)
+     ADD_SHORTCUT_FOR_ACTION (self->shortcuts, "view.new-folder", "<control><shift>n");
+     ADD_SHORTCUT_FOR_ACTION (self->shortcuts, "view.select-pattern", "<control>s");
+     ADD_SHORTCUT_FOR_ACTION (self->shortcuts, "view.zoom-standard", "<control>0|<control>KP_0");
++#ifdef XDG_TERMINAL_EXEC
++    ADD_SHORTCUT_FOR_ACTION (self->shortcuts, "view.current-directory-xdg-terminal", "<control>period");
++#else
+     ADD_SHORTCUT_FOR_ACTION (self->shortcuts, "view.current-directory-console", "<control>period");
++#endif
+ #undef ADD_SHORTCUT_FOR_ACTION
+ 
+     /* This one should have been a keybinding, because it should trigger only
+diff --git a/src/resources/menu/nautilus-files-view-context-menus.ui b/src/resources/menu/nautilus-files-view-context-menus.ui
+index 2d9a5e3..aa92b09 100644
+--- a/src/resources/menu/nautilus-files-view-context-menus.ui
++++ b/src/resources/menu/nautilus-files-view-context-menus.ui
+@@ -22,6 +22,11 @@
+       <attribute name="action">view.current-directory-console</attribute>
+       <attribute name="hidden-when">action-disabled</attribute>
+     </item>
++    <item>
++      <attribute name="label" translatable="yes">Open in T_erminal</attribute>
++      <attribute name="action">view.current-directory-xdg-terminal</attribute>
++      <attribute name="hidden-when">action-disabled</attribute>
++    </item>
+     <section>
+       <item>
+         <attribute name="label" translatable="yes">_Paste</attribute>
+@@ -121,6 +126,11 @@
+               <attribute name="action">view.console</attribute>
+               <attribute name="hidden-when">action-disabled</attribute>
+             </item>
++            <item>
++              <attribute name="label" translatable="yes">Open in T_erminal</attribute>
++              <attribute name="action">view.xdg-terminal</attribute>
++              <attribute name="hidden-when">action-disabled</attribute>
++            </item>
+           </section>
+         </link>
+       </item>
+diff --git a/src/resources/menu/nautilus-pathbar-context-menu.ui b/src/resources/menu/nautilus-pathbar-context-menu.ui
+index b6edceb..3481d80 100644
+--- a/src/resources/menu/nautilus-pathbar-context-menu.ui
++++ b/src/resources/menu/nautilus-pathbar-context-menu.ui
+@@ -35,6 +35,11 @@
+       <attribute name="action">view.current-directory-console</attribute>
+       <attribute name="hidden-when">action-disabled</attribute>
+     </item>
++    <item>
++      <attribute name="label" translatable="yes">Open in T_erminal</attribute>
++      <attribute name="action">view.current-directory-xdg-terminal</attribute>
++      <attribute name="hidden-when">action-disabled</attribute>
++    </item>
+     <section>
+       <item>
+         <attribute name="label" translatable="yes">R_eload</attribute>

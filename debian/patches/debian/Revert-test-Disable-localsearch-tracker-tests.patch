@@ -1,0 +1,32 @@
+From: Simon McVittie <smcv@debian.org>
+Date: Mon, 9 Jun 2025 18:28:05 +0100
+Subject: Revert "test: Disable localsearch/tracker tests"
+
+These tests didn't work reliably in upstream's CI, but they appear to be
+reliable on Debian buildds, so let's keep the extra coverage.
+
+This reverts commit 1ea0be865bea3b3fbaba33b16de008a9b58756cd.
+
+Bug: https://gitlab.gnome.org/GNOME/nautilus/-/issues/3878
+Forwarded: not-needed
+---
+ test/automated/displayless/meson.build | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/test/automated/displayless/meson.build b/test/automated/displayless/meson.build
+index c0228b8..936a8db 100644
+--- a/test/automated/displayless/meson.build
++++ b/test/automated/displayless/meson.build
+@@ -15,12 +15,6 @@ tests = {
+   'test-filename-common-prefix': {},
+   'test-filename-utilities': {},
+   'test-nautilus-search-engine': {},
+-  # disable localsearch tests for now, until issues with accessing it from
+-  # within the sandbox are resolved
+-  # 'test-nautilus-search-engine-localsearch': {
+-  #   'suite': ['tracker'],
+-  #   'tracker': true,
+-  # },
+   'test-nautilus-search-engine-model': {},
+   'test-nautilus-search-engine-simple': {},
+   'test-ui-utilities': {},

@@ -1,0 +1,47 @@
+From: Nathan Pratta Teodosio <nathan.teodosio@canonical.com>
+Date: Wed, 19 Jun 2024 18:40:34 +0200
+Subject: Use nautilus-sendto to send emails
+
+(triggered by right-click in a file > Email) if it is installed,
+else fall back to default behavior, namely use the portal.
+
+nautilus-sendto is needed because the Thunderbird does not support
+attachments in the plain mailto URI, which the portal simply uses.
+
+Bug: https://gitlab.gnome.org/GNOME/nautilus/-/issues/2431
+Bug-Ubuntu: https://launchpad.net/bugs/2072569
+Bug-Ubuntu: https://launchpad.net/bugs/1996927
+Forwarded: not-needed
+---
+ src/nautilus-files-view.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/src/nautilus-files-view.c b/src/nautilus-files-view.c
+index 236d00a..baed98a 100644
+--- a/src/nautilus-files-view.c
++++ b/src/nautilus-files-view.c
+@@ -6257,6 +6257,24 @@ real_send_email (GStrv              attachments,
+     XdpParent *parent;
+     GtkWidget *toplevel;
+ 
++    g_autofree gchar *nst = NULL;
++    g_auto (GStrv) nst_argv = NULL;
++    g_autoptr (GStrvBuilder) strv_builder = NULL;
++
++    if ((nst = g_find_program_in_path ("nautilus-sendto")) != NULL)
++    {
++        strv_builder = g_strv_builder_new ();
++        /* I must prepend nautilus-sendto to the list of attachments */
++        g_strv_builder_add (strv_builder, nst);
++        for (size_t i = 0; attachments[i] != NULL; i++)
++        {
++            g_strv_builder_add (strv_builder, attachments[i]);
++        }
++        nst_argv = g_strv_builder_end (strv_builder);
++        g_spawn_async(NULL, nst_argv, NULL, G_SPAWN_DEFAULT, NULL, NULL, NULL, NULL);
++        return;
++    }
++
+     portal = xdp_portal_initable_new (&error);
+ 
+     if (error != NULL)

@@ -1,0 +1,5 @@
+usr/include
+usr/lib/*/libnautilus-extension*.so
+usr/lib/*/pkgconfig
+usr/share/doc/nautilus
+usr/share/gir-1.0/Nautilus-4.1.gir
