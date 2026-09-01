@@ -1,40 +1,66 @@
-# nautilus
-[![Pipeline status](https://gitlab.gnome.org/GNOME/nautilus/badges/main/pipeline.svg)](https://gitlab.gnome.org/GNOME/nautilus/commits/main)
-[![coverage report](https://gitlab.gnome.org/GNOME/nautilus/badges/main/coverage.svg)](https://gitlab.gnome.org/GNOME/nautilus/commits/main) 
+# Nautilus с колоночным режимом
 
-This is the project of the [Files](https://apps.gnome.org/Nautilus/) app, a file browser for
-GNOME, internally known by its historical name `nautilus`.
+Форк GNOME Files (Nautilus) 50.2.2 из Ubuntu 26.04, в который добавлен
+колоночный режим отображения — тот самый, что в macOS Finder.
 
-## Supported version
-Only the latest version of Files as provided upstream is supported. Try out the [Flatpak nightly](https://welcome.gnome.org/en/app/Nautilus/#installing-a-nightly-build) installation before filling issues to ensure the installation is reproducible and doesn't have downstream changes on it. In case you cannot reproduce in the nightly installation, don't hesitate to file an issue in your distribution. This is to ensure the issue is well triaged and reaches the proper people.
+Каждая колонка показывает содержимое одного каталога. Выбор папки
+раскрывает её в следующей колонке справа, выбор файла — показывает
+колонку с его описанием.
 
-## Runtime dependencies
-- [Bubblewrap](https://github.com/containers/bubblewrap) installed. Used for security reasons.
-- [LocalSearch](https://gitlab.gnome.org/GNOME/localsearch) properly set up and with all features enabled. Used for fast search and metadata extraction, starred files and batch renaming.
-- [xdg-user-dirs-gtk](https://gitlab.gnome.org/GNOME/xdg-user-dirs-gtk) installed.  Used to create the default bookmarks and update localization.
+## Что добавлено
 
-## Discourse
+* Третий режим отображения рядом со «Значками» и «Списком».
+  Переключается кнопкой в шапке окна (цикл из трёх), пунктом
+  «View As» в меню вида, либо `Ctrl+1` / `Ctrl+2` / `Ctrl+3`.
+* Выбор запоминается — режим можно включить один раз и навсегда.
+* Шевроны у папок, автопрокрутка к новой колонке, переходы
+  между колонками стрелками влево-вправо.
+* Ширина колонок тянется мышью за разделитель и запоминается.
+* Колонка предпросмотра для выделенного файла: миниатюра, имя,
+  тип, размер, даты. Отключается в меню вида.
+* Перетаскивание файлов между колонками, включая раскрытие папки
+  при наведении на неё с перетаскиваемым файлом.
+* «Создать папку» и вставка действуют на каталог активной колонки,
+  а не на корневой.
 
-For more informal discussion we use [GNOME Discourse](https://discourse.gnome.org/tags/nautilus) in the Applications category with the `nautilus` tag. Feel free to open a topic there.
+## Сборка и установка
 
-## Extensions
+Один раз — зависимости:
 
-Documentation for the libnautilus-extension API is available [here](https://gnome.pages.gitlab.gnome.org/nautilus/).  Also, if you are interested in developing a Nautilus extension in Python you should refer to the [nautilus-python](https://gnome.pages.gitlab.gnome.org/nautilus-python/) documentation.
+```
+sudo apt build-dep nautilus
+sudo apt install meson ninja-build
+```
 
-## How to report issues
+Затем:
 
-Report issues to the GNOME [issue tracking system](https://gitlab.gnome.org/GNOME/nautilus/issues).
+```
+./install.sh devel      # отдельное приложение рядом с системным
+./install.sh replace    # заменить системный Files
+```
 
-## Feature requests
+Для разработки, без установки:
 
-Files is a core compoment of the GNOME desktop experience. As such, any changes in behavior or appearance only happen in accordance with the [GNOME design team][design-team].
+```
+meson setup builddir --prefix=/usr/local -Dprofile=Devel \
+  -Ddocs=false -Dtests=none -Dcloudproviders=false
+ninja -C builddir
+./run-devel.sh
+```
 
-For major changes, it is best to start a discussion on [discourse] and reach out on the [#gnome-design matrix room][design-room], and only involve the issue tracker once agreement has been reached.
+## Устройство
 
-In particular mockups must be approved by the design team to be considered for implementation.
+Основной код — `src/nautilus-columns-view.c`. Колоночный режим — это
+подкласс `NautilusListBase`, наравне с `NautilusGridView` и
+`NautilusListView`. Он переиспользует ту же общую модель
+(`NautilusViewModel`), которая уже умеет держать несколько каталогов
+одновременно ради раскрывающихся папок в списке: колонка N+1 — это
+`GtkFilterListModel` по строкам, чей родитель — выбранная строка
+колонки N.
 
-For enhancements that are limited in scope and well-defined, it is acceptable to directly open an issue using the shortcoming template.
+История начинается с коммита `ef42a7a` — нетронутый исходник Ubuntu
+со всеми её патчами. Всё, что после, — это изменения форка.
 
-[design-team]: https://gitlab.gnome.org/Teams/Design
-[discourse]: https://discourse.gnome.org/tag/nautilus
-[design-room]: https://matrix.to/#/#gnome-design:gnome.org
+## Лицензия
+
+GPL-3.0-or-later, как и у исходного Nautilus.
