@@ -22,23 +22,35 @@
 #include "nautilus-name-cell.h"
 #include "nautilus-view-cell.h"
 #include "nautilus-view-item.h"
+#include "nautilus-image.h"
 #include "nautilus-view-model.h"
 
 #include <glib/gi18n.h>
 
-/* Width of a single column, in pixels, per zoom level. Finder uses a fixed
- * width which the user may drag. We follow the zoom level instead, for now. */
-#define COLUMN_WIDTH_SMALL 200
-#define COLUMN_WIDTH_MEDIUM 240
-#define COLUMN_WIDTH_LARGE 320
+/* Column width is a user setting, dragged with the handle between two
+ * columns, and is independent from the zoom level, which sizes icons and
+ * text. Keep the bounds in sync with the range of the "column-width" key. */
+#define COLUMN_WIDTH_MIN 150
+#define COLUMN_WIDTH_MAX 800
+#define DIVIDER_WIDTH 5
+#define PREVIEW_ICON_SIZE 128
 
 typedef struct
 {
     NautilusColumnsView *view; /* Unowned. */
 
+    /* A preview column stands in for the contents of a selected file. It has
+     * no model, no selection and no list widget: just a description of the
+     * file. Guard on this before touching any of those. */
+    gboolean is_preview;
+
     /* The row whose children this column shows, or NULL for the root
      * directory of the view. Owned. */
     GtkTreeListRow *parent_row;
+
+    /* The drag handle drawn before this column, or NULL for the first one.
+     * Owned by the columns box. */
+    GtkWidget *divider;
 
     GtkWidget *scrolled_window; /* Owned by the columns box. */
     GtkListView *list_view;     /* Owned by the scrolled window. */
@@ -73,11 +85,16 @@ struct _NautilusColumnsView
     GHashTable *bound_items;
 
     gulong model_items_changed_id;
+    gulong model_selection_changed_id;
     NautilusViewModel *observed_model; /* Unowned. */
 
     /* One-shot handler used to scroll to a newly appended column once it has
      * been allocated and the adjustment knows about it. */
     gulong hadjustment_upper_id;
+
+    /* Column width while the handle between two columns is being dragged. */
+    int drag_start_width;
+    int dragged_width;
 };
 
 G_DEFINE_TYPE (NautilusColumnsView, nautilus_columns_view, NAUTILUS_TYPE_LIST_BASE)
@@ -103,6 +120,12 @@ static void create_column (NautilusColumnsView *self,
                            GtkTreeListRow      *parent_row);
 static void truncate_columns (NautilusColumnsView *self,
                               guint                n_kept);
+static void create_preview_column (NautilusColumnsView *self,
+                                   GtkTreeListRow      *row,
+                                   NautilusFile        *file);
+static void update_child_column (NautilusColumnsView *self,
+                                 Column              *column);
+static guint get_active_column_index (NautilusColumnsView *self);
 
 static NautilusViewInfo
 real_get_view_info (NautilusListBase *list_base)
@@ -194,6 +217,68 @@ refresh_bound_positions (NautilusColumnsView *self)
     }
 }
 
+/* The shared model is the one the rest of Files talks to: it is what gets
+ * selected when a new folder is created, when an item is pasted, or when a
+ * folder is hovered during a drag. Mirror that back into the columns. */
+static void
+sync_columns_from_shared_model (NautilusColumnsView *self)
+{
+    NautilusViewModel *model = nautilus_list_base_get_model (NAUTILUS_LIST_BASE (self));
+    g_autoptr (GtkBitset) shared_selection = NULL;
+    g_autoptr (GHashTable) selected_rows = NULL;
+    GtkBitsetIter iter;
+    guint i;
+
+    if (model == NULL)
+    {
+        return;
+    }
+
+    shared_selection = gtk_selection_model_get_selection (GTK_SELECTION_MODEL (model));
+    selected_rows = g_hash_table_new (NULL, NULL);
+
+    for (gboolean valid = gtk_bitset_iter_init_first (&iter, shared_selection, &i);
+         valid;
+         valid = gtk_bitset_iter_next (&iter, &i))
+    {
+        g_autoptr (GtkTreeListRow) row = g_list_model_get_item (G_LIST_MODEL (model), i);
+
+        if (row != NULL)
+        {
+            g_hash_table_add (selected_rows, row);
+        }
+    }
+
+    for (guint c = 0; c < self->columns->len; c++)
+    {
+        Column *column = g_ptr_array_index (self->columns, c);
+        g_autoptr (GtkBitset) selected = NULL;
+        g_autoptr (GtkBitset) mask = NULL;
+        guint n_items;
+
+        if (column->is_preview)
+        {
+            continue;
+        }
+
+        n_items = g_list_model_get_n_items (G_LIST_MODEL (column->filter_model));
+        selected = gtk_bitset_new_empty ();
+
+        for (guint j = 0; j < n_items; j++)
+        {
+            g_autoptr (GtkTreeListRow) row = g_list_model_get_item (G_LIST_MODEL (column->filter_model), j);
+
+            if (g_hash_table_contains (selected_rows, row))
+            {
+                gtk_bitset_add (selected, j);
+            }
+        }
+
+        mask = gtk_bitset_new_range (0, n_items);
+        gtk_selection_model_set_selection (GTK_SELECTION_MODEL (column->selection), selected, mask);
+    }
+}
+
 static void
 on_shared_model_items_changed (NautilusColumnsView *self)
 {
@@ -221,7 +306,14 @@ find_position_in_column (Column         *column,
                          GtkTreeListRow *row,
                          guint          *out_position)
 {
-    guint n_items = g_list_model_get_n_items (G_LIST_MODEL (column->filter_model));
+    guint n_items;
+
+    if (column->is_preview)
+    {
+        return FALSE;
+    }
+
+    n_items = g_list_model_get_n_items (G_LIST_MODEL (column->filter_model));
 
     for (guint i = 0; i < n_items; i++)
     {
@@ -259,6 +351,31 @@ column_free (gpointer data)
 
     g_clear_object (&column->parent_row);
     g_free (column);
+}
+
+static void
+on_shared_model_selection_changed (NautilusColumnsView *self)
+{
+    guint active;
+    Column *column;
+
+    if (self->syncing_selection)
+    {
+        return;
+    }
+
+    self->syncing_selection = TRUE;
+    sync_columns_from_shared_model (self);
+    self->syncing_selection = FALSE;
+
+    /* Something outside the view picked an item: follow it, so that hovering a
+     * folder while dragging opens it, as it does in the other views. */
+    if (self->columns->len != 0)
+    {
+        active = get_active_column_index (self);
+        column = g_ptr_array_index (self->columns, active);
+        update_child_column (self, column);
+    }
 }
 
 static void
@@ -337,6 +454,11 @@ get_lone_selected_row (Column *column)
 {
     g_autoptr (GtkBitset) selection = NULL;
 
+    if (column->is_preview)
+    {
+        return NULL;
+    }
+
     selection = gtk_selection_model_get_selection (GTK_SELECTION_MODEL (column->selection));
     if (gtk_bitset_get_size (selection) != 1)
     {
@@ -375,8 +497,20 @@ update_child_column (NautilusColumnsView *self,
     }
 
     item = gtk_tree_list_row_get_item (row);
-    if (item == NULL || !nautilus_file_is_directory (nautilus_view_item_get_file (item)))
+    if (item == NULL)
     {
+        return;
+    }
+
+    if (!nautilus_file_is_directory (nautilus_view_item_get_file (item)))
+    {
+        /* A file has no contents to show in a further column, so describe it
+         * there instead, the way Finder does. */
+        if (g_settings_get_boolean (nautilus_columns_view_preferences, "show-preview"))
+        {
+            create_preview_column (self, row, nautilus_view_item_get_file (item));
+        }
+
         return;
     }
 
@@ -409,7 +543,7 @@ on_column_selection_changed (GtkSelectionModel *selection_model,
     {
         Column *other = g_ptr_array_index (self->columns, i);
 
-        if (other != column)
+        if (other != column && !other->is_preview)
         {
             gtk_selection_model_unselect_all (GTK_SELECTION_MODEL (other->selection));
         }
@@ -432,6 +566,11 @@ get_active_column_index (NautilusColumnsView *self)
         Column *column = g_ptr_array_index (self->columns, i);
         g_autoptr (GtkBitset) selection = NULL;
 
+        if (column->is_preview)
+        {
+            continue;
+        }
+
         selection = gtk_selection_model_get_selection (GTK_SELECTION_MODEL (column->selection));
         if (!gtk_bitset_is_empty (selection))
         {
@@ -440,6 +579,25 @@ get_active_column_index (NautilusColumnsView *self)
     }
 
     return active;
+}
+
+static void
+on_show_preview_changed (NautilusColumnsView *self)
+{
+    guint active;
+    Column *column;
+
+    if (self->columns->len == 0)
+    {
+        return;
+    }
+
+    active = get_active_column_index (self);
+    column = g_ptr_array_index (self->columns, active);
+
+    /* Drop whatever is to the right and build it again under the new setting. */
+    truncate_columns (self, active + 1);
+    update_child_column (self, column);
 }
 
 static gboolean
@@ -622,23 +780,216 @@ on_list_view_activated (GtkListView *list_view,
 static int
 get_column_width (NautilusColumnsView *self)
 {
-    switch (self->zoom_level)
+    return g_settings_get_int (nautilus_columns_view_preferences, "column-width");
+}
+
+static void
+apply_column_width (NautilusColumnsView *self,
+                    int                  width)
+{
+    for (guint i = 0; i < self->columns->len; i++)
     {
-        case NAUTILUS_LIST_ZOOM_LEVEL_SMALL:
-        {
-            return COLUMN_WIDTH_SMALL;
-        }
+        Column *column = g_ptr_array_index (self->columns, i);
 
-        case NAUTILUS_LIST_ZOOM_LEVEL_LARGE:
-        {
-            return COLUMN_WIDTH_LARGE;
-        }
-
-        default:
-        {
-            return COLUMN_WIDTH_MEDIUM;
-        }
+        gtk_widget_set_size_request (column->scrolled_window, width, -1);
     }
+}
+
+static void
+on_column_width_changed (NautilusColumnsView *self)
+{
+    apply_column_width (self, get_column_width (self));
+}
+
+static void
+on_divider_drag_begin (GtkGestureDrag      *gesture,
+                       double               start_x,
+                       double               start_y,
+                       NautilusColumnsView *self)
+{
+    self->drag_start_width = get_column_width (self);
+    self->dragged_width = self->drag_start_width;
+}
+
+static void
+on_divider_drag_update (GtkGestureDrag      *gesture,
+                        double               offset_x,
+                        double               offset_y,
+                        NautilusColumnsView *self)
+{
+    /* Every column keeps the same width, as Finder does unless told otherwise,
+     * so that the layout stays predictable while drilling down. */
+    self->dragged_width = CLAMP (self->drag_start_width + (int) offset_x,
+                                 COLUMN_WIDTH_MIN, COLUMN_WIDTH_MAX);
+
+    apply_column_width (self, self->dragged_width);
+}
+
+static void
+on_divider_drag_end (GtkGestureDrag      *gesture,
+                     double               offset_x,
+                     double               offset_y,
+                     NautilusColumnsView *self)
+{
+    g_settings_set_int (nautilus_columns_view_preferences, "column-width",
+                        self->dragged_width);
+}
+
+static GtkWidget *
+create_divider (NautilusColumnsView *self)
+{
+    GtkWidget *divider = gtk_separator_new (GTK_ORIENTATION_VERTICAL);
+    GtkGesture *gesture;
+
+    gtk_widget_set_size_request (divider, DIVIDER_WIDTH, -1);
+    gtk_widget_add_css_class (divider, "nautilus-columns-view-divider");
+    gtk_widget_set_cursor_from_name (divider, "col-resize");
+
+    gesture = gtk_gesture_drag_new ();
+    g_signal_connect (gesture, "drag-begin", G_CALLBACK (on_divider_drag_begin), self);
+    g_signal_connect (gesture, "drag-update", G_CALLBACK (on_divider_drag_update), self);
+    g_signal_connect (gesture, "drag-end", G_CALLBACK (on_divider_drag_end), self);
+    gtk_widget_add_controller (divider, GTK_EVENT_CONTROLLER (gesture));
+
+    return divider;
+}
+
+/* Puts a freshly built column into the box, with a drag handle before it if
+ * it is not the first one, and brings it into view. */
+static void
+append_column (NautilusColumnsView *self,
+               Column              *column)
+{
+    gtk_widget_set_size_request (column->scrolled_window, get_column_width (self), -1);
+    gtk_widget_set_vexpand (column->scrolled_window, TRUE);
+
+    if (self->columns->len > 0)
+    {
+        column->divider = create_divider (self);
+        gtk_box_append (GTK_BOX (self->columns_box), column->divider);
+    }
+
+    g_ptr_array_add (self->columns, column);
+    gtk_box_append (GTK_BOX (self->columns_box), column->scrolled_window);
+
+    scroll_to_last_column (self);
+}
+
+static GtkWidget *
+create_preview_content (NautilusColumnsView *self,
+                        NautilusFile        *file)
+{
+    static const struct
+    {
+        const char *attribute;
+        const char *label;
+    }
+    attributes[] =
+    {
+        { "type", N_("Kind") },
+        { "size", N_("Size") },
+        { "date_modified", N_("Modified") },
+        { "date_created", N_("Created") },
+    };
+
+    GtkWidget *box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 12);
+    NautilusImage *image = nautilus_image_new ();
+    GtkWidget *name_label;
+    GtkWidget *grid;
+    g_autoptr (GdkPaintable) paintable = NULL;
+    g_autofree char *name = NULL;
+    int scale_factor = gtk_widget_get_scale_factor (GTK_WIDGET (self));
+    int attribute_row = 0;
+
+    gtk_widget_set_valign (box, GTK_ALIGN_START);
+    gtk_widget_set_margin_top (box, 18);
+    gtk_widget_set_margin_bottom (box, 18);
+    gtk_widget_set_margin_start (box, 12);
+    gtk_widget_set_margin_end (box, 12);
+
+    /* Same path the grid cells take: a themed icon as fallback, with the
+     * thumbnail layered on top once it has been generated. */
+    paintable = nautilus_file_get_icon_paintable (file, PREVIEW_ICON_SIZE, scale_factor,
+                                                  NAUTILUS_FILE_ICON_FLAGS_NONE);
+    nautilus_image_set_size (image, PREVIEW_ICON_SIZE);
+    nautilus_image_set_fallback (image, paintable);
+    if (nautilus_file_should_show_thumbnail (file))
+    {
+        g_autoptr (GFile) location = nautilus_file_get_location (file);
+
+        nautilus_image_set_source (image, location);
+    }
+    gtk_widget_set_halign (GTK_WIDGET (image), GTK_ALIGN_CENTER);
+    gtk_box_append (GTK_BOX (box), GTK_WIDGET (image));
+
+    name = nautilus_file_get_string_attribute (file, "name");
+    name_label = gtk_label_new (name);
+    gtk_label_set_wrap (GTK_LABEL (name_label), TRUE);
+    gtk_label_set_wrap_mode (GTK_LABEL (name_label), PANGO_WRAP_WORD_CHAR);
+    gtk_label_set_justify (GTK_LABEL (name_label), GTK_JUSTIFY_CENTER);
+    gtk_label_set_max_width_chars (GTK_LABEL (name_label), 20);
+    gtk_widget_add_css_class (name_label, "heading");
+    gtk_box_append (GTK_BOX (box), name_label);
+
+    grid = gtk_grid_new ();
+    gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
+    gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
+    gtk_widget_set_halign (grid, GTK_ALIGN_CENTER);
+
+    for (gsize i = 0; i < G_N_ELEMENTS (attributes); i++)
+    {
+        g_autofree char *value = nautilus_file_get_string_attribute (file, attributes[i].attribute);
+        GtkWidget *key_label;
+        GtkWidget *value_label;
+
+        if (value == NULL || *value == '\0')
+        {
+            continue;
+        }
+
+        key_label = gtk_label_new (_(attributes[i].label));
+        gtk_widget_set_halign (key_label, GTK_ALIGN_END);
+        gtk_widget_set_valign (key_label, GTK_ALIGN_START);
+        gtk_widget_add_css_class (key_label, "caption");
+        gtk_widget_add_css_class (key_label, "dim-label");
+
+        value_label = gtk_label_new (value);
+        gtk_widget_set_halign (value_label, GTK_ALIGN_START);
+        gtk_label_set_wrap (GTK_LABEL (value_label), TRUE);
+        gtk_label_set_wrap_mode (GTK_LABEL (value_label), PANGO_WRAP_WORD_CHAR);
+        gtk_label_set_max_width_chars (GTK_LABEL (value_label), 18);
+        gtk_label_set_xalign (GTK_LABEL (value_label), 0.0);
+        gtk_widget_add_css_class (value_label, "caption");
+
+        gtk_grid_attach (GTK_GRID (grid), key_label, 0, attribute_row, 1, 1);
+        gtk_grid_attach (GTK_GRID (grid), value_label, 1, attribute_row, 1, 1);
+        attribute_row++;
+    }
+
+    gtk_box_append (GTK_BOX (box), grid);
+
+    return box;
+}
+
+static void
+create_preview_column (NautilusColumnsView *self,
+                       GtkTreeListRow      *row,
+                       NautilusFile        *file)
+{
+    Column *column = g_new0 (Column, 1);
+
+    column->view = self;
+    column->is_preview = TRUE;
+    column->parent_row = g_object_ref (row);
+
+    column->scrolled_window = gtk_scrolled_window_new ();
+    gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (column->scrolled_window),
+                                    GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+    gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (column->scrolled_window),
+                                   create_preview_content (self, file));
+    gtk_widget_add_css_class (column->scrolled_window, "nautilus-columns-view-preview");
+
+    append_column (self, column);
 }
 
 static void
@@ -684,17 +1035,12 @@ create_column (NautilusColumnsView *self,
                                     GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (column->scrolled_window),
                                    GTK_WIDGET (column->list_view));
-    gtk_widget_set_size_request (column->scrolled_window, get_column_width (self), -1);
-    gtk_widget_set_vexpand (column->scrolled_window, TRUE);
     gtk_widget_add_css_class (column->scrolled_window, "nautilus-columns-view-column");
 
     g_signal_connect (column->selection, "selection-changed",
                       G_CALLBACK (on_column_selection_changed), column);
 
-    g_ptr_array_add (self->columns, column);
-    gtk_box_append (GTK_BOX (self->columns_box), column->scrolled_window);
-
-    scroll_to_last_column (self);
+    append_column (self, column);
 }
 
 static void
@@ -705,8 +1051,9 @@ truncate_columns (NautilusColumnsView *self,
     {
         Column *column = g_ptr_array_index (self->columns, self->columns->len - 1);
 
-        /* Tell NautilusFilesView it may stop monitoring this directory. */
-        if (column->parent_row != NULL)
+        /* Tell NautilusFilesView it may stop monitoring this directory. A
+         * preview column stands for a file, so there is nothing to unload. */
+        if (!column->is_preview && column->parent_row != NULL)
         {
             g_autoptr (NautilusViewItem) item = gtk_tree_list_row_get_item (column->parent_row);
 
@@ -719,6 +1066,11 @@ truncate_columns (NautilusColumnsView *self,
         }
 
         gtk_box_remove (GTK_BOX (self->columns_box), column->scrolled_window);
+        if (column->divider != NULL)
+        {
+            gtk_box_remove (GTK_BOX (self->columns_box), column->divider);
+            column->divider = NULL;
+        }
 
         g_clear_object (&column->selection);
         g_clear_object (&column->filter_model);
@@ -741,10 +1093,10 @@ on_model_changed (NautilusColumnsView *self)
 {
     NautilusViewModel *model = nautilus_list_base_get_model (NAUTILUS_LIST_BASE (self));
 
-    if (self->observed_model != NULL && self->model_items_changed_id != 0)
+    if (self->observed_model != NULL)
     {
-        g_signal_handler_disconnect (self->observed_model, self->model_items_changed_id);
-        self->model_items_changed_id = 0;
+        g_clear_signal_handler (&self->model_items_changed_id, self->observed_model);
+        g_clear_signal_handler (&self->model_selection_changed_id, self->observed_model);
         self->observed_model = NULL;
     }
 
@@ -760,6 +1112,9 @@ on_model_changed (NautilusColumnsView *self)
     self->model_items_changed_id =
         g_signal_connect_swapped (model, "items-changed",
                                   G_CALLBACK (on_shared_model_items_changed), self);
+    self->model_selection_changed_id =
+        g_signal_connect_swapped (model, "selection-changed",
+                                  G_CALLBACK (on_shared_model_selection_changed), self);
 
     create_column (self, NULL);
 }
@@ -860,11 +1215,11 @@ real_set_zoom_level (NautilusListBase *list_base,
 
     self->zoom_level = new_level;
 
-    for (guint i = 0; i < self->columns->len; i++)
+    if (g_settings_get_enum (nautilus_columns_view_preferences,
+                             "default-zoom-level") != new_level)
     {
-        Column *column = g_ptr_array_index (self->columns, i);
-
-        gtk_widget_set_size_request (column->scrolled_window, get_column_width (self), -1);
+        g_settings_set_enum (nautilus_columns_view_preferences,
+                             "default-zoom-level", new_level);
     }
 
     g_object_notify (G_OBJECT (self), "icon-size");
@@ -910,6 +1265,46 @@ real_scroll_to (NautilusListBase   *list_base,
     g_clear_pointer (&scroll, gtk_scroll_info_unref);
 }
 
+/* Which folder "New Folder", paste and friends should act on: the one the
+ * active column shows, rather than the view's root directory. */
+static NautilusViewItem *
+real_get_backing_item (NautilusListBase *list_base)
+{
+    NautilusColumnsView *self = NAUTILUS_COLUMNS_VIEW (list_base);
+    Column *column;
+    guint active;
+    g_autoptr (GtkTreeListRow) selected = NULL;
+
+    if (self->columns->len == 0)
+    {
+        return NULL;
+    }
+
+    active = get_active_column_index (self);
+    column = g_ptr_array_index (self->columns, active);
+    selected = get_lone_selected_row (column);
+
+    /* A selected folder already open to the right is the one being worked in. */
+    if (selected != NULL && self->columns->len > active + 1)
+    {
+        Column *child = g_ptr_array_index (self->columns, active + 1);
+
+        if (!child->is_preview && child->parent_row == selected)
+        {
+            return gtk_tree_list_row_get_item (selected);
+        }
+    }
+
+    /* Otherwise, the folder this column itself shows. NULL stands for the
+     * view's own directory, which is what the first column shows. */
+    if (column->parent_row != NULL)
+    {
+        return gtk_tree_list_row_get_item (column->parent_row);
+    }
+
+    return NULL;
+}
+
 static void
 real_set_enable_rubberband (NautilusListBase *list_base,
                             gboolean          enabled)
@@ -919,6 +1314,11 @@ real_set_enable_rubberband (NautilusListBase *list_base,
     for (guint i = 0; i < self->columns->len; i++)
     {
         Column *column = g_ptr_array_index (self->columns, i);
+
+        if (column->is_preview)
+        {
+            continue;
+        }
 
         gtk_list_view_set_enable_rubberband (column->list_view, enabled);
     }
@@ -961,10 +1361,10 @@ dispose (GObject *object)
 {
     NautilusColumnsView *self = NAUTILUS_COLUMNS_VIEW (object);
 
-    if (self->observed_model != NULL && self->model_items_changed_id != 0)
+    if (self->observed_model != NULL)
     {
-        g_signal_handler_disconnect (self->observed_model, self->model_items_changed_id);
-        self->model_items_changed_id = 0;
+        g_clear_signal_handler (&self->model_items_changed_id, self->observed_model);
+        g_clear_signal_handler (&self->model_selection_changed_id, self->observed_model);
         self->observed_model = NULL;
     }
 
@@ -1015,6 +1415,7 @@ nautilus_columns_view_class_init (NautilusColumnsViewClass *klass)
     list_base_class->get_icon_size = real_get_icon_size;
     list_base_class->get_sort_state = real_get_sort_state;
     list_base_class->get_view_info = real_get_view_info;
+    list_base_class->get_backing_item = real_get_backing_item;
     list_base_class->get_zoom_level = real_get_zoom_level;
     list_base_class->scroll_to = real_scroll_to;
     list_base_class->set_enable_rubberband = real_set_enable_rubberband;
@@ -1044,7 +1445,8 @@ nautilus_columns_view_init (NautilusColumnsView *self)
 
     self->columns = g_ptr_array_new_with_free_func (column_free);
     self->bound_items = g_hash_table_new (NULL, NULL);
-    self->zoom_level = columns_view_info.zoom_level_standard;
+    self->zoom_level = g_settings_get_enum (nautilus_columns_view_preferences,
+                                            "default-zoom-level");
     self->sort_attribute = g_quark_from_string ("name");
 
     /* Columns scroll horizontally as a whole; each column scrolls vertically
@@ -1070,6 +1472,16 @@ nautilus_columns_view_init (NautilusColumnsView *self)
     g_signal_connect_object (gtk_filechooser_preferences,
                              "changed::" NAUTILUS_PREFERENCES_SORT_DIRECTORIES_FIRST,
                              G_CALLBACK (update_sort_directories_first),
+                             self,
+                             G_CONNECT_SWAPPED);
+    g_signal_connect_object (nautilus_columns_view_preferences,
+                             "changed::column-width",
+                             G_CALLBACK (on_column_width_changed),
+                             self,
+                             G_CONNECT_SWAPPED);
+    g_signal_connect_object (nautilus_columns_view_preferences,
+                             "changed::show-preview",
+                             G_CALLBACK (on_show_preview_changed),
                              self,
                              G_CONNECT_SWAPPED);
 }

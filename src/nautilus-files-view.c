@@ -2567,6 +2567,16 @@ nautilus_files_view_set_show_hidden_files (NautilusFilesView *self,
 }
 
 static void
+action_columns_preview (GSimpleAction *action,
+                        GVariant      *state,
+                        gpointer       user_data)
+{
+    g_simple_action_set_state (action, state);
+    g_settings_set_boolean (nautilus_columns_view_preferences, "show-preview",
+                            g_variant_get_boolean (state));
+}
+
+static void
 action_show_hidden_files (GSimpleAction *action,
                           GVariant      *state,
                           gpointer       user_data)
@@ -6874,6 +6884,7 @@ const GActionEntry view_entries[] =
     { .name = "zoom-standard", .activate = action_zoom_standard },
     { .name = "sort", .parameter_type = "(sb)", .state = "('invalid',false)", .change_state = action_sort_order_changed },
     { .name = "show-hidden-files", .state = "true", .change_state = action_show_hidden_files },
+    { .name = "columns-preview", .state = "true", .change_state = action_columns_preview },
     { .name = "visible-columns", .activate = action_visible_columns },
     { .name = "visible-captions", .activate = action_visible_captions },
     /* Background menu */
@@ -7778,6 +7789,18 @@ nautilus_files_view_update_actions_state (NautilusFilesView *self)
                                          "visible-captions");
     g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
                                  NAUTILUS_IS_GRID_VIEW (self->list_base));
+
+    action = g_action_map_lookup_action (G_ACTION_MAP (view_action_group),
+                                         "columns-preview");
+    g_simple_action_set_enabled (G_SIMPLE_ACTION (action),
+                                 NAUTILUS_IS_COLUMNS_VIEW (self->list_base));
+    if (NAUTILUS_IS_COLUMNS_VIEW (self->list_base))
+    {
+        g_action_group_change_action_state (view_action_group, "columns-preview",
+                                            g_variant_new_boolean (
+                                                g_settings_get_boolean (nautilus_columns_view_preferences,
+                                                                        "show-preview")));
+    }
 
     update_zoom_actions_state (self);
 

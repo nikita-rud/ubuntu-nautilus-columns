@@ -73,6 +73,7 @@
     <child schema="org.gnome.nautilus.preferences" name="preferences"/>
     <child schema="org.gnome.nautilus.compression" name="compression"/>
     <child schema="org.gnome.nautilus.icon-view" name="icon-view"/>
+    <child schema="org.gnome.nautilus.columns-view" name="columns-view"/>
     <child schema="org.gnome.nautilus.list-view" name="list-view"/>
     <child schema="org.gnome.nautilus.window-state" name="window-state"/>
   </schema>
@@ -213,6 +214,24 @@
       </aliases>
       <default>'medium'</default>
       <summary>Default icon view zoom level</summary>
+    </key>
+  </schema>
+
+  <schema path="/org/gnome/nautilus/columns-view/" id="org.gnome.nautilus.columns-view" gettext-domain="nautilus">
+    <key name="default-zoom-level" enum="org.gnome.nautilus.ListZoomLevel">
+      <default>'medium'</default>
+      <summary>Default columns view zoom level</summary>
+    </key>
+    <key type="i" name="column-width">
+      <default>240</default>
+      <range min="150" max="800"/>
+      <summary>Width of a single column, in pixels</summary>
+      <description>How wide each column of the columns view is drawn. Changed by dragging the handle between two columns.</description>
+    </key>
+    <key type="b" name="show-preview">
+      <default>true</default>
+      <summary>Show a preview column</summary>
+      <description>If true, selecting a file in the columns view shows a last column previewing it, instead of nothing.</description>
     </key>
   </schema>
 

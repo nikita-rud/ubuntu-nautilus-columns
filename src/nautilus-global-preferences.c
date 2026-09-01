@@ -31,6 +31,7 @@ GSettings *nautilus_preferences;
 GSettings *nautilus_compression_preferences;
 GSettings *nautilus_icon_view_preferences;
 GSettings *nautilus_list_view_preferences;
+GSettings *nautilus_columns_view_preferences;
 GSettings *nautilus_window_state;
 GSettings *gtk_filechooser_preferences;
 GSettings *gnome_lockdown_preferences;
@@ -103,6 +104,7 @@ nautilus_global_preferences_init (void)
     nautilus_window_state = g_settings_new ("org.gnome.nautilus.window-state");
     nautilus_icon_view_preferences = g_settings_new ("org.gnome.nautilus.icon-view");
     nautilus_list_view_preferences = g_settings_new ("org.gnome.nautilus.list-view");
+    nautilus_columns_view_preferences = g_settings_new ("org.gnome.nautilus.columns-view");
     /* Some settings such as show hidden files are shared between Nautilus and GTK file chooser */
     gtk_filechooser_preferences = g_settings_new_with_path ("org.gtk.gtk4.Settings.FileChooser",
                                                             "/org/gtk/gtk4/settings/file-chooser/");
