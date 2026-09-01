@@ -8,15 +8,20 @@ set -euo pipefail
 
 cd "$(git rev-parse --show-toplevel)"
 
-BASE=$(head -1 debian/changelog | sed -n 's/^[^(]*(\([^)]*\)).*/\1/p')
-SUITE=$(head -1 debian/changelog | sed -n 's/^[^)]*) \([^;]*\);.*/\1/p')
+# Первую строку читаем один раз в переменную: конвейеры вида
+# `head -1 ... | grep -q` при `set -o pipefail` могут упасть по SIGPIPE.
+FIRST=$(sed -n '1p' debian/changelog)
+BASE=$(printf '%s\n' "$FIRST" | sed -n 's/^[^(]*(\([^)]*\)).*/\1/p')
+SUITE=$(printf '%s\n' "$FIRST" | sed -n 's/^[^)]*) \([^;]*\);.*/\1/p')
 REV=$(cat FORK_REVISION)
 VERSION="${BASE}+columns${REV}"
 
-if head -1 debian/changelog | grep -q '+columns'; then
-  echo "Запись форка уже на месте: $(head -1 debian/changelog)"
-  exit 0
-fi
+case "$FIRST" in
+  *+columns*)
+    echo "Запись форка уже на месте: $FIRST"
+    exit 0
+    ;;
+esac
 
 TMP=$(mktemp)
 {

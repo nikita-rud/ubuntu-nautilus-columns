@@ -16,7 +16,10 @@ cd "$(git rev-parse --show-toplevel)"
 git rev-parse --verify -q ubuntu >/dev/null || git branch ubuntu origin/ubuntu
 git rev-parse --verify -q main   >/dev/null || git branch main   origin/main
 
-CURRENT=$(git show ubuntu:debian/changelog | head -1 | sed -n 's/^[^(]*(\([^)]*\)).*/\1/p')
+# Без конвейера с head: он закрывает трубу, git получает SIGPIPE, и при
+# `set -o pipefail` скрипт молча умирает с кодом 141, ничего не сделав.
+CHANGELOG=$(git show ubuntu:debian/changelog)
+CURRENT=$(printf '%s\n' "$CHANGELOG" | sed -n '1s/^[^(]*(\([^)]*\)).*/\1/p')
 NEW=$(apt-cache showsrc nautilus 2>/dev/null | awk '/^Version:/ {print $2}' | sort -V | tail -1)
 
 if [ -z "$NEW" ]; then

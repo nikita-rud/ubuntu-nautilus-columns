@@ -73,13 +73,18 @@ jobs:
           version=$(echo "$out" | sed -n 's/^\(REBASED\|CONFLICT\) //p')
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
-          if [ "$code" = 0 ] && echo "$out" | grep -q '^REBASED'; then
-            echo "rebased=true" >> "$GITHUB_OUTPUT"
-          elif [ "$code" = 2 ]; then
-            echo "rebased=conflict" >> "$GITHUB_OUTPUT"
-          else
-            echo "rebased=false" >> "$GITHUB_OUTPUT"
-          fi
+          case "$code:$out" in
+            0:*REBASED*)        echo "rebased=true"     >> "$GITHUB_OUTPUT" ;;
+            0:*NOTHING_TO_DO*)  echo "rebased=false"    >> "$GITHUB_OUTPUT" ;;
+            2:*)                echo "rebased=conflict" >> "$GITHUB_OUTPUT" ;;
+            *)
+              # Ни то, ни другое: скрипт сломался. Раньше это молча
+              # считалось за "делать нечего", и сторож годами рапортовал
+              # бы об успехе, ничего не проверяя.
+              echo "::error::rebase-onto-ubuntu.sh завершился с кодом $code"
+              exit 1
+              ;;
+          esac
 
       - name: Отправить перенесённое
         if: steps.rebase.outputs.rebased == 'true'
