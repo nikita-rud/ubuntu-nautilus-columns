@@ -877,8 +877,9 @@ create_divider (NautilusColumnsView *self)
     GtkGesture *drag;
     GtkGesture *click;
 
-    /* A hairline to look at, with a comfortably wide area around it to grab. */
-    gtk_widget_set_hexpand (line, TRUE);
+    /* A hairline to look at, with a comfortably wide area around it to grab.
+     * Note it must not hexpand: that propagates up the widget tree and blows
+     * up the gaps between the columns. */
     gtk_widget_set_vexpand (line, TRUE);
     gtk_widget_set_halign (line, GTK_ALIGN_CENTER);
     gtk_box_append (GTK_BOX (divider), line);
@@ -913,6 +914,7 @@ append_column (NautilusColumnsView *self,
 {
     gtk_widget_set_size_request (column->scrolled_window, get_column_width (self), -1);
     gtk_widget_set_vexpand (column->scrolled_window, TRUE);
+    gtk_widget_set_hexpand (column->scrolled_window, FALSE);
 
     if (self->columns->len > 0)
     {
@@ -1034,8 +1036,10 @@ create_preview_column (NautilusColumnsView *self,
     column->parent_row = g_object_ref (row);
 
     column->scrolled_window = gtk_scrolled_window_new ();
+    /* EXTERNAL rather than NEVER: with NEVER the scrolled window demands the
+     * full minimum width of its contents, which overrides the width we set. */
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (column->scrolled_window),
-                                    GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+                                    GTK_POLICY_EXTERNAL, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (column->scrolled_window),
                                    create_preview_content (self, file));
     gtk_widget_add_css_class (column->scrolled_window, "nautilus-columns-view-preview");
@@ -1083,8 +1087,10 @@ create_column (NautilusColumnsView *self,
                       G_CALLBACK (on_list_view_activated), self);
 
     column->scrolled_window = gtk_scrolled_window_new ();
+    /* EXTERNAL rather than NEVER: with NEVER the scrolled window demands the
+     * full minimum width of its contents, which overrides the width we set. */
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (column->scrolled_window),
-                                    GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+                                    GTK_POLICY_EXTERNAL, GTK_POLICY_AUTOMATIC);
     gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (column->scrolled_window),
                                    GTK_WIDGET (column->list_view));
     gtk_widget_add_css_class (column->scrolled_window, "nautilus-columns-view-column");
@@ -1528,6 +1534,7 @@ nautilus_columns_view_init (NautilusColumnsView *self)
                                     GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER);
 
     self->columns_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+    gtk_widget_set_halign (self->columns_box, GTK_ALIGN_START);
     gtk_widget_add_css_class (self->columns_box, "nautilus-columns-view-box");
     gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolled_window), self->columns_box);
 
