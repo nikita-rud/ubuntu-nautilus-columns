@@ -110,7 +110,7 @@ ninja -C builddir
 
 ## Автоматика
 
-`.github/workflows/watch-upstream.yml` раз в неделю проверяет, не вышла ли
+`.github/workflows/watch-upstream.yml` раз в сутки проверяет, не вышла ли
 новая версия nautilus в Ubuntu. Если вышла — переносит наши коммиты на неё
 (`tools/rebase-onto-ubuntu.sh`), собирает и публикует. Если перенос
 конфликтует — заводит issue, дальше нужен человек.
