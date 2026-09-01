@@ -497,13 +497,21 @@ hover_timer (gpointer user_data)
         return G_SOURCE_REMOVE;
     }
 
-    NautilusViewModel *model = nautilus_list_base_get_model (self);
     guint i = nautilus_view_cell_get_position (cell);
 
-    gtk_selection_model_select_item (GTK_SELECTION_MODEL (model), i, TRUE);
-    nautilus_list_base_activate_selection (self, FALSE);
+    NAUTILUS_LIST_BASE_CLASS (G_OBJECT_GET_CLASS (self))->open_hovered_item (self, i);
 
     return G_SOURCE_REMOVE;
+}
+
+static void
+default_open_hovered_item (NautilusListBase *self,
+                           guint             position)
+{
+    NautilusViewModel *model = nautilus_list_base_get_model (self);
+
+    gtk_selection_model_select_item (GTK_SELECTION_MODEL (model), position, TRUE);
+    nautilus_list_base_activate_selection (self, FALSE);
 }
 
 static void
@@ -1273,6 +1281,7 @@ nautilus_list_base_class_init (NautilusListBaseClass *klass)
     widget_class->grab_focus = nautilus_list_base_grab_focus;
 
     klass->get_backing_item = default_get_backing_item;
+    klass->open_hovered_item = default_open_hovered_item;
     klass->preview_selection_event = default_preview_selection_event;
     klass->setup_directory = base_setup_directory;
 

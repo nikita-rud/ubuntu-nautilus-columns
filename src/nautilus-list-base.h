@@ -43,6 +43,10 @@ struct _NautilusListBaseClass
                                                double            x,
                                                double            y);
         NautilusViewItem *(*get_backing_item) (NautilusListBase *self);
+        /* What to do when a folder is hovered long enough during a drag. The
+         * default navigates into it. */
+        void       (*open_hovered_item)       (NautilusListBase *self,
+                                               guint             position);
         void       (*preview_selection_event) (NautilusListBase *self,
                                                GtkDirectionType  direction);
 

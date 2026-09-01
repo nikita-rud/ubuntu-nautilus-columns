@@ -32,7 +32,7 @@
  * text. Keep the bounds in sync with the range of the "column-width" key. */
 #define COLUMN_WIDTH_MIN 150
 #define COLUMN_WIDTH_MAX 800
-#define DIVIDER_WIDTH 5
+#define DIVIDER_WIDTH 9
 #define PREVIEW_ICON_SIZE 128
 
 typedef struct
@@ -95,6 +95,11 @@ struct _NautilusColumnsView
     /* Column width while the handle between two columns is being dragged. */
     int drag_start_width;
     int dragged_width;
+
+    /* The column last clicked in. Kept separately from the selection, because
+     * clicking the background of a column clears the selection while still
+     * saying which folder the user means. */
+    guint active_column;
 };
 
 G_DEFINE_TYPE (NautilusColumnsView, nautilus_columns_view, NAUTILUS_TYPE_LIST_BASE)
@@ -488,13 +493,17 @@ update_child_column (NautilusColumnsView *self,
         }
     }
 
-    /* Whatever was to the right of this column is stale now. */
-    truncate_columns (self, index + 1);
-
     if (row == NULL)
     {
+        /* Nothing selected, or several things. Keep the columns as they are:
+         * clicking the background, or right-clicking it for the context menu,
+         * clears the selection, and that must not throw away the path the
+         * user has drilled into. */
         return;
     }
+
+    /* Whatever was to the right of this column is stale now. */
+    truncate_columns (self, index + 1);
 
     item = gtk_tree_list_row_get_item (row);
     if (item == NULL)
@@ -523,6 +532,18 @@ update_child_column (NautilusColumnsView *self,
 }
 
 static void
+on_column_pressed (GtkGestureClick *gesture,
+                   int              n_press,
+                   double           x,
+                   double           y,
+                   gpointer         user_data)
+{
+    Column *column = user_data;
+
+    column->view->active_column = column_index (column->view, column);
+}
+
+static void
 on_column_selection_changed (GtkSelectionModel *selection_model,
                              guint              position,
                              guint              n_items,
@@ -535,6 +556,8 @@ on_column_selection_changed (GtkSelectionModel *selection_model,
     {
         return;
     }
+
+    self->active_column = column_index (self, column);
 
     self->syncing_selection = TRUE;
 
@@ -555,27 +578,24 @@ on_column_selection_changed (GtkSelectionModel *selection_model,
     self->syncing_selection = FALSE;
 }
 
-/* The column the user is working in: the rightmost one holding a selection. */
+/* The column the user is working in. */
 static guint
 get_active_column_index (NautilusColumnsView *self)
 {
-    guint active = 0;
+    guint active;
 
-    for (guint i = 0; i < self->columns->len; i++)
+    if (self->columns->len == 0)
     {
-        Column *column = g_ptr_array_index (self->columns, i);
-        g_autoptr (GtkBitset) selection = NULL;
+        return 0;
+    }
 
-        if (column->is_preview)
-        {
-            continue;
-        }
+    active = MIN (self->active_column, self->columns->len - 1);
 
-        selection = gtk_selection_model_get_selection (GTK_SELECTION_MODEL (column->selection));
-        if (!gtk_bitset_is_empty (selection))
-        {
-            active = i;
-        }
+    /* A preview column stands for a file and holds no folder, so the column
+     * before it is the one being worked in. */
+    if (((Column *) g_ptr_array_index (self->columns, active))->is_preview && active > 0)
+    {
+        active--;
     }
 
     return active;
@@ -809,6 +829,8 @@ on_divider_drag_begin (GtkGestureDrag      *gesture,
 {
     self->drag_start_width = get_column_width (self);
     self->dragged_width = self->drag_start_width;
+
+    gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_CLAIMED);
 }
 
 static void
@@ -835,21 +857,50 @@ on_divider_drag_end (GtkGestureDrag      *gesture,
                         self->dragged_width);
 }
 
+static void
+on_divider_pressed (GtkGestureClick     *gesture,
+                    int                  n_press,
+                    double               x,
+                    double               y,
+                    NautilusColumnsView *self)
+{
+    /* Take the press for ourselves. Otherwise it reaches the view's background
+     * handler, which clears the selection on every click. */
+    gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_CLAIMED);
+}
+
 static GtkWidget *
 create_divider (NautilusColumnsView *self)
 {
-    GtkWidget *divider = gtk_separator_new (GTK_ORIENTATION_VERTICAL);
-    GtkGesture *gesture;
+    GtkWidget *divider = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+    GtkWidget *line = gtk_separator_new (GTK_ORIENTATION_VERTICAL);
+    GtkGesture *drag;
+    GtkGesture *click;
+
+    /* A hairline to look at, with a comfortably wide area around it to grab. */
+    gtk_widget_set_hexpand (line, TRUE);
+    gtk_widget_set_vexpand (line, TRUE);
+    gtk_widget_set_halign (line, GTK_ALIGN_CENTER);
+    gtk_box_append (GTK_BOX (divider), line);
 
     gtk_widget_set_size_request (divider, DIVIDER_WIDTH, -1);
     gtk_widget_add_css_class (divider, "nautilus-columns-view-divider");
     gtk_widget_set_cursor_from_name (divider, "col-resize");
 
-    gesture = gtk_gesture_drag_new ();
-    g_signal_connect (gesture, "drag-begin", G_CALLBACK (on_divider_drag_begin), self);
-    g_signal_connect (gesture, "drag-update", G_CALLBACK (on_divider_drag_update), self);
-    g_signal_connect (gesture, "drag-end", G_CALLBACK (on_divider_drag_end), self);
-    gtk_widget_add_controller (divider, GTK_EVENT_CONTROLLER (gesture));
+    drag = gtk_gesture_drag_new ();
+    g_signal_connect (drag, "drag-begin", G_CALLBACK (on_divider_drag_begin), self);
+    g_signal_connect (drag, "drag-update", G_CALLBACK (on_divider_drag_update), self);
+    g_signal_connect (drag, "drag-end", G_CALLBACK (on_divider_drag_end), self);
+    gtk_widget_add_controller (divider, GTK_EVENT_CONTROLLER (drag));
+
+    click = gtk_gesture_click_new ();
+    gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click), GDK_BUTTON_PRIMARY);
+    g_signal_connect (click, "pressed", G_CALLBACK (on_divider_pressed), self);
+    gtk_widget_add_controller (divider, GTK_EVENT_CONTROLLER (click));
+
+    /* Grouped, so that claiming the press in the click gesture does not cancel
+     * the drag gesture along with everything else in the chain. */
+    gtk_gesture_group (drag, click);
 
     return divider;
 }
@@ -998,6 +1049,7 @@ create_column (NautilusColumnsView *self,
 {
     NautilusViewModel *model = nautilus_list_base_get_model (NAUTILUS_LIST_BASE (self));
     GtkListItemFactory *factory;
+    GtkGesture *click;
     g_autoptr (GtkCustomFilter) filter = NULL;
     Column *column;
 
@@ -1039,6 +1091,13 @@ create_column (NautilusColumnsView *self,
 
     g_signal_connect (column->selection, "selection-changed",
                       G_CALLBACK (on_column_selection_changed), column);
+
+    /* Any click in the column, on an item or on its background, makes it the
+     * one that New Folder and paste act on. */
+    click = gtk_gesture_click_new ();
+    gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click), 0);
+    g_signal_connect (click, "pressed", G_CALLBACK (on_column_pressed), column);
+    gtk_widget_add_controller (column->scrolled_window, GTK_EVENT_CONTROLLER (click));
 
     append_column (self, column);
 }
@@ -1083,6 +1142,7 @@ truncate_columns (NautilusColumnsView *self,
 static void
 rebuild_columns (NautilusColumnsView *self)
 {
+    self->active_column = 0;
     truncate_columns (self, 0);
     g_clear_pointer (&self->position_map, g_hash_table_unref);
     create_column (self, NULL);
@@ -1306,6 +1366,18 @@ real_get_backing_item (NautilusListBase *list_base)
 }
 
 static void
+real_open_hovered_item (NautilusListBase *list_base,
+                        guint             position)
+{
+    NautilusViewModel *model = nautilus_list_base_get_model (list_base);
+
+    /* Selecting is enough: the folder opens in the next column, which is where
+     * the user is dragging towards. Navigating into it, as the other views do,
+     * would throw away every column to the left. */
+    gtk_selection_model_select_item (GTK_SELECTION_MODEL (model), position, TRUE);
+}
+
+static void
 real_set_enable_rubberband (NautilusListBase *list_base,
                             gboolean          enabled)
 {
@@ -1416,6 +1488,7 @@ nautilus_columns_view_class_init (NautilusColumnsViewClass *klass)
     list_base_class->get_sort_state = real_get_sort_state;
     list_base_class->get_view_info = real_get_view_info;
     list_base_class->get_backing_item = real_get_backing_item;
+    list_base_class->open_hovered_item = real_open_hovered_item;
     list_base_class->get_zoom_level = real_get_zoom_level;
     list_base_class->scroll_to = real_scroll_to;
     list_base_class->set_enable_rubberband = real_set_enable_rubberband;
