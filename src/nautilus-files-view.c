@@ -41,6 +41,7 @@
 #include "nautilus-batch-rename-dialog.h"
 #include "nautilus-batch-rename-utilities.h"
 #include "nautilus-clipboard.h"
+#include "nautilus-columns-view.h"
 #include "nautilus-compress-dialog.h"
 #include "nautilus-dbus-launcher.h"
 #include "nautilus-directory.h"
@@ -3249,7 +3250,8 @@ connect_inner_view (NautilusFilesView *self)
                              G_CALLBACK (on_popup_selection_context_menu), self,
                              G_CONNECT_DEFAULT);
 
-    if (NAUTILUS_IS_LIST_VIEW (self->list_base))
+    if (NAUTILUS_IS_LIST_VIEW (self->list_base) ||
+        NAUTILUS_IS_COLUMNS_VIEW (self->list_base))
     {
         g_signal_connect_object (self->list_base, "load-subdirectory",
                                  G_CALLBACK (on_load_subdirectory), self,
@@ -9726,6 +9728,12 @@ create_inner_view (NautilusFilesView *self,
         }
         break;
 
+        case NAUTILUS_VIEW_COLUMNS_ID:
+        {
+            self->list_base = NAUTILUS_LIST_BASE (nautilus_columns_view_new ());
+        }
+        break;
+
         case NAUTILUS_VIEW_NETWORK_ID:
         {
             self->list_base = NAUTILUS_LIST_BASE (nautilus_network_view_new ());
@@ -9768,6 +9776,7 @@ nautilus_files_view_get_toggle_icon_name (NautilusFilesView *self)
 
         case NAUTILUS_VIEW_NETWORK_ID:
         case NAUTILUS_VIEW_GRID_ID:
+        case NAUTILUS_VIEW_COLUMNS_ID:
         {
             return "view-list-symbolic";
         }
@@ -9801,6 +9810,7 @@ nautilus_files_view_get_toggle_tooltip (NautilusFilesView *self)
 
         case NAUTILUS_VIEW_NETWORK_ID:
         case NAUTILUS_VIEW_GRID_ID:
+        case NAUTILUS_VIEW_COLUMNS_ID:
         {
             return _("List View");
         }

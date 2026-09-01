@@ -46,6 +46,29 @@ menu view_menu {
       hidden-when: "action-disabled";
     }
   }
+
+  section {
+    /* Translators: header of a group of view mode options. */
+    label: C_("menu section", "View As");
+
+    item {
+      label: _("_List");
+      action: "slot.files-view-mode-named";
+      target: "list";
+    }
+
+    item {
+      label: _("_Icons");
+      action: "slot.files-view-mode-named";
+      target: "grid";
+    }
+
+    item {
+      label: _("_Columns");
+      action: "slot.files-view-mode-named";
+      target: "columns";
+    }
+  }
 }
 
 template $NautilusViewControls: Adw.Bin {

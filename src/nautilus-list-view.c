@@ -846,6 +846,7 @@ setup_name_cell (GtkSignalListItemFactory *factory,
     cell = nautilus_name_cell_new (NAUTILUS_LIST_BASE (self));
     gtk_column_view_cell_set_child (listitem, GTK_WIDGET (cell));
     setup_cell_common (G_OBJECT (listitem), cell);
+    g_object_bind_property (listitem, "position", cell, "position", G_BINDING_SYNC_CREATE);
     setup_cell_hover_inner_target (cell, nautilus_name_cell_get_content (NAUTILUS_NAME_CELL (cell)));
 
     g_object_bind_property (self, "icon-size",
@@ -971,6 +972,7 @@ setup_star_cell (GtkSignalListItemFactory *factory,
     cell = nautilus_star_cell_new (NAUTILUS_LIST_BASE (user_data));
     gtk_column_view_cell_set_child (listitem, GTK_WIDGET (cell));
     setup_cell_common (G_OBJECT (listitem), cell);
+    g_object_bind_property (listitem, "position", cell, "position", G_BINDING_SYNC_CREATE);
     setup_cell_hover (cell);
 }
 
@@ -988,6 +990,7 @@ setup_label_cell (GtkSignalListItemFactory *factory,
     cell = nautilus_label_cell_new (NAUTILUS_LIST_BASE (user_data), nautilus_column);
     gtk_column_view_cell_set_child (listitem, GTK_WIDGET (cell));
     setup_cell_common (G_OBJECT (listitem), cell);
+    g_object_bind_property (listitem, "position", cell, "position", G_BINDING_SYNC_CREATE);
     setup_cell_hover (cell);
 }
 

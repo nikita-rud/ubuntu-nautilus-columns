@@ -51,6 +51,9 @@
 #include "nautilus-monitor.h"
 #include "nautilus-ui-utilities.h"
 
+/* Defined below, but needed by the action state sync above it. */
+static const char *view_id_to_nick (guint view_id);
+
 enum
 {
     PROP_ACTIVE = 1,
@@ -348,6 +351,13 @@ nautilus_window_slot_sync_actions (NautilusWindowSlot *self)
     {
         variant = g_variant_new_uint32 (view_id);
         g_action_change_state (action, variant);
+    }
+    action = g_action_map_lookup_action (G_ACTION_MAP (self->slot_action_group), "files-view-mode-named");
+    g_simple_action_set_enabled (G_SIMPLE_ACTION (action), !is_network_view);
+    if (g_action_get_enabled (action))
+    {
+        g_simple_action_set_state (G_SIMPLE_ACTION (action),
+                                   g_variant_new_string (view_id_to_nick (view_id)));
     }
     action = g_action_map_lookup_action (G_ACTION_MAP (self->slot_action_group), "files-view-mode-toggle");
     g_simple_action_set_enabled (G_SIMPLE_ACTION (action), !is_network_view);
@@ -1113,7 +1123,8 @@ change_files_view_mode (NautilusWindowSlot *self,
                         guint               view_id)
 {
     g_return_if_fail (view_id == NAUTILUS_VIEW_LIST_ID ||
-                      view_id == NAUTILUS_VIEW_GRID_ID);
+                      view_id == NAUTILUS_VIEW_GRID_ID ||
+                      view_id == NAUTILUS_VIEW_COLUMNS_ID);
 
     if (self->default_view_id != view_id)
     {
@@ -1147,6 +1158,73 @@ action_files_view_mode_toggle (GSimpleAction *action,
     {
         change_files_view_mode (self, NAUTILUS_VIEW_LIST_ID);
     }
+}
+
+/* The "files-view-mode" action takes a uint32, which cannot be expressed as a
+ * menu item target in Blueprint. So the view menu uses this string-typed
+ * sibling instead, which also gives us radio marks for free. */
+static const char *
+view_id_to_nick (guint view_id)
+{
+    switch (view_id)
+    {
+        case NAUTILUS_VIEW_LIST_ID:
+        {
+            return "list";
+        }
+
+        case NAUTILUS_VIEW_GRID_ID:
+        {
+            return "grid";
+        }
+
+        case NAUTILUS_VIEW_COLUMNS_ID:
+        {
+            return "columns";
+        }
+
+        default:
+        {
+            return "";
+        }
+    }
+}
+
+static guint
+nick_to_view_id (const char *nick)
+{
+    if (g_strcmp0 (nick, "list") == 0)
+    {
+        return NAUTILUS_VIEW_LIST_ID;
+    }
+    else if (g_strcmp0 (nick, "grid") == 0)
+    {
+        return NAUTILUS_VIEW_GRID_ID;
+    }
+    else if (g_strcmp0 (nick, "columns") == 0)
+    {
+        return NAUTILUS_VIEW_COLUMNS_ID;
+    }
+
+    return NAUTILUS_VIEW_INVALID_ID;
+}
+
+static void
+action_files_view_mode_named (GSimpleAction *action,
+                              GVariant      *value,
+                              gpointer       user_data)
+{
+    NautilusWindowSlot *self = NAUTILUS_WINDOW_SLOT (user_data);
+    guint view_id = nick_to_view_id (g_variant_get_string (value, NULL));
+
+    if (view_id == NAUTILUS_VIEW_INVALID_ID ||
+        !NAUTILUS_IS_FILES_VIEW (self->content_view))
+    {
+        return;
+    }
+
+    g_simple_action_set_state (action, value);
+    change_files_view_mode (self, view_id);
 }
 
 static void
@@ -1251,6 +1329,11 @@ const GActionEntry slot_entries[] =
         .change_state = action_files_view_mode
     },
     { .name = "files-view-mode-toggle", .activate = action_files_view_mode_toggle },
+    {
+        .name = "files-view-mode-named", .parameter_type = "s",
+        .state = "''",
+        .change_state = action_files_view_mode_named
+    },
     { .name = "search-visible", .state = "false", .change_state = action_search_visible },
     { .name = "search-global", .state = "false", .change_state = action_search_global },
     { .name = "focus-search", .activate = action_focus_search },
@@ -1367,6 +1450,9 @@ nautilus_window_slot_init (NautilusWindowSlot *self)
                                        "slot.files-view-mode", "<control>2",
                                        "u", NAUTILUS_VIEW_GRID_ID);
     ADD_SHORTCUT_FOR_ACTION_WITH_ARGS (self->shortcuts,
+                                       "slot.files-view-mode", "<control>3",
+                                       "u", NAUTILUS_VIEW_COLUMNS_ID);
+    ADD_SHORTCUT_FOR_ACTION_WITH_ARGS (self->shortcuts,
                                        "slot.open-location", "<alt>Home|HomePage|Start",
                                        "s", home_uri);
     ADD_SHORTCUT_FOR_ACTION_WITH_ARGS (self->shortcuts,
@@ -1407,7 +1493,8 @@ nautilus_window_slot_init (NautilusWindowSlot *self)
 
     self->default_view_id = g_settings_get_enum (nautilus_preferences, NAUTILUS_PREFERENCES_DEFAULT_FOLDER_VIEWER);
     if (G_UNLIKELY (self->default_view_id != NAUTILUS_VIEW_LIST_ID &&
-                    self->default_view_id != NAUTILUS_VIEW_GRID_ID))
+                    self->default_view_id != NAUTILUS_VIEW_GRID_ID &&
+                    self->default_view_id != NAUTILUS_VIEW_COLUMNS_ID))
     {
         g_warning ("Invalid value stored for 'default-folder-viewer' key for "
                    "the 'org.gnome.nautilus.preferences' schemas. Installed "

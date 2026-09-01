@@ -872,7 +872,9 @@ setup_cell_common (GObject          *listitem,
     expression = gtk_property_expression_new (GTK_TYPE_LIST_ITEM, NULL, "item");
     expression = gtk_property_expression_new (GTK_TYPE_TREE_LIST_ROW, expression, "item");
     gtk_expression_bind (expression, cell, "item", listitem);
-    g_object_bind_property (listitem, "position", cell, "position", G_BINDING_SYNC_CREATE);
+    /* NOTE: :position is bound by each view, because it must hold the position
+     * within the shared model, which is not the position GTK reports for the
+     * cell in views whose cells are spread over several list widgets. */
 
     controller = GTK_EVENT_CONTROLLER (gtk_gesture_click_new ());
     gtk_widget_add_controller (GTK_WIDGET (cell), controller);
