@@ -1,5 +1,0 @@
-#!/bin/sh
-set -e
-# Automatically added by dh_installdeb/13.31ubuntu1
-dpkg-maintscript-helper rm_conffile /etc/xdg/autostart/nautilus-autostart.desktop 3.28.1-2\~ -- "$@"
-# End automatically added section

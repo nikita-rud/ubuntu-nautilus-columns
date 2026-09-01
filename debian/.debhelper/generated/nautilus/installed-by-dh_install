@@ -1,7 +1,0 @@
-debian/tmp/usr/bin
-debian/tmp/usr/lib/x86_64-linux-gnu/nautilus/extensions-4/libnautilus-image-properties.so
-debian/tmp/usr/lib/x86_64-linux-gnu/nautilus/extensions-4/libtotem-properties-page.so
-debian/tmp/usr/share/applications
-debian/tmp/usr/share/dbus-1
-debian/tmp/usr/share/man
-debian/tmp/usr/share/metainfo

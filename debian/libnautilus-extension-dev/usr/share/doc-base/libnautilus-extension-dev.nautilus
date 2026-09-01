@@ -1,9 +1,0 @@
-Document: nautilus
-Title: Nautilus API reference
-Author: The GNOME Project
-Abstract: Nautilus Extension API
-Section: Programming/C
-
-Format: HTML
-Index: /usr/share/doc/nautilus/index.html
-Files: /usr/share/doc/nautilus/*.html

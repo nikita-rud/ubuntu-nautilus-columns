@@ -1,3 +1,16 @@
 builddir/
 public/
 debs/
+
+# Результаты dpkg-buildpackage
+debian/.debhelper/
+debian/build/
+debian/tmp/
+debian/files
+debian/nautilus/
+debian/nautilus-data/
+debian/libnautilus-extension4/
+debian/libnautilus-extension-dev/
+debian/gir1.2-nautilus-4.1/
+debian/*.substvars
+debian/*.debhelper.log

@@ -1,8 +1,0 @@
-gir1.2-nautilus-4.1_50.2.2-0ubuntu0.1+columns1_amd64.deb introspection optional architecture=amd64
-libnautilus-extension-dev_50.2.2-0ubuntu0.1+columns1_amd64.deb libdevel optional architecture=amd64
-libnautilus-extension4-dbgsym_50.2.2-0ubuntu0.1+columns1_amd64.ddeb debug optional architecture=amd64 automatic=yes
-libnautilus-extension4_50.2.2-0ubuntu0.1+columns1_amd64.deb libs optional architecture=amd64
-nautilus-data_50.2.2-0ubuntu0.1+columns1_all.deb gnome optional architecture=all
-nautilus-dbgsym_50.2.2-0ubuntu0.1+columns1_amd64.ddeb debug optional architecture=amd64 automatic=yes
-nautilus_50.2.2-0ubuntu0.1+columns1_amd64.buildinfo gnome optional
-nautilus_50.2.2-0ubuntu0.1+columns1_amd64.deb gnome optional architecture=amd64
