@@ -1150,13 +1150,27 @@ action_files_view_mode_toggle (GSimpleAction *action,
     }
 
     current_view_id = nautilus_files_view_get_view_id (self->content_view);
-    if (current_view_id == NAUTILUS_VIEW_LIST_ID)
+
+    /* Cycle through the view modes, in the order they appear in the menu. */
+    switch (current_view_id)
     {
-        change_files_view_mode (self, NAUTILUS_VIEW_GRID_ID);
-    }
-    else
-    {
-        change_files_view_mode (self, NAUTILUS_VIEW_LIST_ID);
+        case NAUTILUS_VIEW_LIST_ID:
+        {
+            change_files_view_mode (self, NAUTILUS_VIEW_GRID_ID);
+        }
+        break;
+
+        case NAUTILUS_VIEW_GRID_ID:
+        {
+            change_files_view_mode (self, NAUTILUS_VIEW_COLUMNS_ID);
+        }
+        break;
+
+        default:
+        {
+            change_files_view_mode (self, NAUTILUS_VIEW_LIST_ID);
+        }
+        break;
     }
 }
 

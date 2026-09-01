@@ -74,6 +74,10 @@ struct _NautilusColumnsView
 
     gulong model_items_changed_id;
     NautilusViewModel *observed_model; /* Unowned. */
+
+    /* One-shot handler used to scroll to a newly appended column once it has
+     * been allocated and the adjustment knows about it. */
+    gulong hadjustment_upper_id;
 };
 
 G_DEFINE_TYPE (NautilusColumnsView, nautilus_columns_view, NAUTILUS_TYPE_LIST_BASE)
@@ -212,6 +216,27 @@ column_filter_func (gpointer item,
     return parent == wanted_parent;
 }
 
+static gboolean
+find_position_in_column (Column         *column,
+                         GtkTreeListRow *row,
+                         guint          *out_position)
+{
+    guint n_items = g_list_model_get_n_items (G_LIST_MODEL (column->filter_model));
+
+    for (guint i = 0; i < n_items; i++)
+    {
+        g_autoptr (GtkTreeListRow) candidate = g_list_model_get_item (G_LIST_MODEL (column->filter_model), i);
+
+        if (candidate == row)
+        {
+            *out_position = i;
+            return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
 static guint
 column_index (NautilusColumnsView *self,
               Column              *column)
@@ -234,6 +259,36 @@ column_free (gpointer data)
 
     g_clear_object (&column->parent_row);
     g_free (column);
+}
+
+static void
+on_hadjustment_upper_changed (GtkAdjustment       *adjustment,
+                              GParamSpec          *pspec,
+                              NautilusColumnsView *self)
+{
+    gtk_adjustment_set_value (adjustment,
+                              gtk_adjustment_get_upper (adjustment) -
+                              gtk_adjustment_get_page_size (adjustment));
+
+    g_clear_signal_handler (&self->hadjustment_upper_id, adjustment);
+}
+
+/* A column which has just been appended has no allocation yet, so we cannot
+ * scroll to it right away. Wait for the adjustment to grow instead. */
+static void
+scroll_to_last_column (NautilusColumnsView *self)
+{
+    GtkWidget *scrolled_window = nautilus_list_base_get_scrolled_window (NAUTILUS_LIST_BASE (self));
+    GtkAdjustment *adjustment;
+
+    if (self->hadjustment_upper_id != 0)
+    {
+        return;
+    }
+
+    adjustment = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
+    self->hadjustment_upper_id = g_signal_connect (adjustment, "notify::upper",
+                                                   G_CALLBACK (on_hadjustment_upper_changed), self);
 }
 
 static void
@@ -300,6 +355,17 @@ update_child_column (NautilusColumnsView *self,
     g_autoptr (GtkTreeListRow) row = get_lone_selected_row (column);
     g_autoptr (NautilusViewItem) item = NULL;
 
+    if (row != NULL && self->columns->len > index + 1)
+    {
+        Column *existing = g_ptr_array_index (self->columns, index + 1);
+
+        /* Same folder as before: keep the column, and everything past it. */
+        if (existing->parent_row == row)
+        {
+            return;
+        }
+    }
+
     /* Whatever was to the right of this column is stale now. */
     truncate_columns (self, index + 1);
 
@@ -355,6 +421,95 @@ on_column_selection_changed (GtkSelectionModel *selection_model,
     self->syncing_selection = FALSE;
 }
 
+/* The column the user is working in: the rightmost one holding a selection. */
+static guint
+get_active_column_index (NautilusColumnsView *self)
+{
+    guint active = 0;
+
+    for (guint i = 0; i < self->columns->len; i++)
+    {
+        Column *column = g_ptr_array_index (self->columns, i);
+        g_autoptr (GtkBitset) selection = NULL;
+
+        selection = gtk_selection_model_get_selection (GTK_SELECTION_MODEL (column->selection));
+        if (!gtk_bitset_is_empty (selection))
+        {
+            active = i;
+        }
+    }
+
+    return active;
+}
+
+static gboolean
+on_key_pressed (GtkEventControllerKey *controller,
+                guint                  keyval,
+                guint                  keycode,
+                GdkModifierType        state,
+                gpointer                user_data)
+{
+    NautilusColumnsView *self = NAUTILUS_COLUMNS_VIEW (user_data);
+    guint active;
+
+    if ((state & (GDK_CONTROL_MASK | GDK_SHIFT_MASK | GDK_ALT_MASK)) != 0 ||
+        self->columns->len == 0)
+    {
+        return GDK_EVENT_PROPAGATE;
+    }
+
+    active = get_active_column_index (self);
+
+    if (keyval == GDK_KEY_Left)
+    {
+        Column *column;
+        Column *parent_column;
+        guint position;
+
+        if (active == 0)
+        {
+            return GDK_EVENT_PROPAGATE;
+        }
+
+        column = g_ptr_array_index (self->columns, active);
+        parent_column = g_ptr_array_index (self->columns, active - 1);
+
+        if (column->parent_row == NULL ||
+            !find_position_in_column (parent_column, column->parent_row, &position))
+        {
+            return GDK_EVENT_PROPAGATE;
+        }
+
+        gtk_selection_model_select_item (GTK_SELECTION_MODEL (parent_column->selection),
+                                         position, TRUE);
+        gtk_widget_grab_focus (GTK_WIDGET (parent_column->list_view));
+
+        return GDK_EVENT_STOP;
+    }
+    else if (keyval == GDK_KEY_Right)
+    {
+        Column *child;
+
+        if (active + 1 >= self->columns->len)
+        {
+            return GDK_EVENT_PROPAGATE;
+        }
+
+        child = g_ptr_array_index (self->columns, active + 1);
+        if (g_list_model_get_n_items (G_LIST_MODEL (child->filter_model)) == 0)
+        {
+            return GDK_EVENT_PROPAGATE;
+        }
+
+        gtk_selection_model_select_item (GTK_SELECTION_MODEL (child->selection), 0, TRUE);
+        gtk_widget_grab_focus (GTK_WIDGET (child->list_view));
+
+        return GDK_EVENT_STOP;
+    }
+
+    return GDK_EVENT_PROPAGATE;
+}
+
 static void
 setup_cell (GtkSignalListItemFactory *factory,
             GtkListItem              *listitem,
@@ -363,6 +518,7 @@ setup_cell (GtkSignalListItemFactory *factory,
     NautilusColumnsView *self = NAUTILUS_COLUMNS_VIEW (user_data);
     NautilusViewCell *cell;
     GtkExpression *expression;
+    GtkWidget *chevron;
 
     cell = nautilus_name_cell_new (NAUTILUS_LIST_BASE (self));
     gtk_list_item_set_child (listitem, GTK_WIDGET (cell));
@@ -373,6 +529,14 @@ setup_cell (GtkSignalListItemFactory *factory,
     g_object_bind_property (self, "icon-size",
                             cell, "icon-size",
                             G_BINDING_SYNC_CREATE);
+
+    /* Folders get a chevron, to show they lead into the next column. */
+    chevron = gtk_image_new_from_icon_name ("pan-end-symbolic");
+    gtk_widget_set_valign (chevron, GTK_ALIGN_CENTER);
+    gtk_widget_add_css_class (chevron, "dim-label");
+    gtk_widget_set_visible (chevron, FALSE);
+    gtk_box_append (GTK_BOX (nautilus_name_cell_get_content (NAUTILUS_NAME_CELL (cell))), chevron);
+    g_object_set_data (G_OBJECT (cell), "nautilus-columns-view-chevron", chevron);
 
     /* Use file display name as accessible label, as the other views do. */
     expression = gtk_property_expression_new (GTK_TYPE_LIST_ITEM, NULL, "item");
@@ -389,6 +553,7 @@ bind_cell (GtkSignalListItemFactory *factory,
 {
     NautilusColumnsView *self = NAUTILUS_COLUMNS_VIEW (user_data);
     GtkWidget *cell = gtk_list_item_get_child (listitem);
+    GtkWidget *chevron;
     g_autoptr (GtkTreeListRow) row = NULL;
     g_autoptr (NautilusViewItem) item = NULL;
     guint position;
@@ -402,6 +567,13 @@ bind_cell (GtkSignalListItemFactory *factory,
     g_return_if_fail (item != NULL);
 
     nautilus_view_item_set_item_ui (item, cell);
+
+    chevron = g_object_get_data (G_OBJECT (cell), "nautilus-columns-view-chevron");
+    if (chevron != NULL)
+    {
+        gtk_widget_set_visible (chevron,
+                                nautilus_file_is_directory (nautilus_view_item_get_file (item)));
+    }
 
     /* Translate the column-local position into the shared model's. */
     if (lookup_shared_position (self, row, &position))
@@ -521,6 +693,8 @@ create_column (NautilusColumnsView *self,
 
     g_ptr_array_add (self->columns, column);
     gtk_box_append (GTK_BOX (self->columns_box), column->scrolled_window);
+
+    scroll_to_last_column (self);
 }
 
 static void
@@ -723,18 +897,13 @@ real_scroll_to (NautilusListBase   *list_base,
     for (guint i = 0; i < self->columns->len; i++)
     {
         Column *column = g_ptr_array_index (self->columns, i);
-        guint n_items = g_list_model_get_n_items (G_LIST_MODEL (column->filter_model));
+        guint position_in_column;
 
-        for (guint j = 0; j < n_items; j++)
+        if (find_position_in_column (column, row, &position_in_column))
         {
-            g_autoptr (GtkTreeListRow) candidate = g_list_model_get_item (G_LIST_MODEL (column->filter_model), j);
-
-            if (candidate == row)
-            {
-                gtk_list_view_scroll_to (column->list_view, j, flags,
-                                         g_steal_pointer (&scroll));
-                return;
-            }
+            gtk_list_view_scroll_to (column->list_view, position_in_column, flags,
+                                     g_steal_pointer (&scroll));
+            return;
         }
     }
 
@@ -799,6 +968,14 @@ dispose (GObject *object)
         self->observed_model = NULL;
     }
 
+    if (self->hadjustment_upper_id != 0)
+    {
+        GtkWidget *scrolled_window = nautilus_list_base_get_scrolled_window (NAUTILUS_LIST_BASE (self));
+        GtkAdjustment *adjustment = gtk_scrolled_window_get_hadjustment (GTK_SCROLLED_WINDOW (scrolled_window));
+
+        g_clear_signal_handler (&self->hadjustment_upper_id, adjustment);
+    }
+
     if (self->columns != NULL)
     {
         for (guint i = 0; i < self->columns->len; i++)
@@ -861,6 +1038,7 @@ static void
 nautilus_columns_view_init (NautilusColumnsView *self)
 {
     GtkWidget *scrolled_window = nautilus_list_base_get_scrolled_window (NAUTILUS_LIST_BASE (self));
+    GtkEventController *key_controller;
 
     gtk_widget_add_css_class (GTK_WIDGET (self), "nautilus-columns-view");
 
@@ -879,6 +1057,13 @@ nautilus_columns_view_init (NautilusColumnsView *self)
     gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scrolled_window), self->columns_box);
 
     nautilus_list_base_setup_gestures (NAUTILUS_LIST_BASE (self));
+
+    /* Left and right move between columns. The list widgets are vertical, so
+     * they have no use for these keys themselves. */
+    key_controller = gtk_event_controller_key_new ();
+    gtk_event_controller_set_propagation_phase (key_controller, GTK_PHASE_CAPTURE);
+    g_signal_connect (key_controller, "key-pressed", G_CALLBACK (on_key_pressed), self);
+    gtk_widget_add_controller (GTK_WIDGET (self), key_controller);
 
     g_signal_connect_swapped (self, "notify::model", G_CALLBACK (on_model_changed), self);
 

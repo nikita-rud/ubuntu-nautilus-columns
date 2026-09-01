@@ -9774,8 +9774,13 @@ nautilus_files_view_get_toggle_icon_name (NautilusFilesView *self)
         }
         break;
 
-        case NAUTILUS_VIEW_NETWORK_ID:
         case NAUTILUS_VIEW_GRID_ID:
+        {
+            return "view-columns-symbolic";
+        }
+        break;
+
+        case NAUTILUS_VIEW_NETWORK_ID:
         case NAUTILUS_VIEW_COLUMNS_ID:
         {
             return "view-list-symbolic";
@@ -9808,8 +9813,13 @@ nautilus_files_view_get_toggle_tooltip (NautilusFilesView *self)
         }
         break;
 
-        case NAUTILUS_VIEW_NETWORK_ID:
         case NAUTILUS_VIEW_GRID_ID:
+        {
+            return _("Columns View");
+        }
+        break;
+
+        case NAUTILUS_VIEW_NETWORK_ID:
         case NAUTILUS_VIEW_COLUMNS_ID:
         {
             return _("List View");
