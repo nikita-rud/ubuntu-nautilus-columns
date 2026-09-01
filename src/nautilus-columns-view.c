@@ -52,6 +52,10 @@ typedef struct
      * Owned by the columns box. */
     GtkWidget *divider;
 
+    /* Width in pixels. Each column keeps its own, as in Finder: dragging a
+     * handle resizes the one column to its left. */
+    int width;
+
     GtkWidget *scrolled_window; /* Owned by the columns box. */
     GtkListView *list_view;     /* Owned by the scrolled window. */
     GtkFilterListModel *filter_model;
@@ -92,9 +96,15 @@ struct _NautilusColumnsView
      * been allocated and the adjustment knows about it. */
     gulong hadjustment_upper_id;
 
-    /* Column width while the handle between two columns is being dragged. */
+    /* State of a handle drag: the width the column had when the drag started,
+     * and where the pointer was, in this widget's coordinates. The handle
+     * itself moves as the column resizes, so its own coordinates are useless
+     * for measuring how far the pointer has travelled. */
     int drag_start_width;
     int dragged_width;
+    double drag_origin_x;
+    double drag_start_x;
+    double drag_start_y;
 
     /* The column last clicked in. Kept separately from the selection, because
      * clicking the background of a column clears the selection while still
@@ -374,11 +384,32 @@ on_shared_model_selection_changed (NautilusColumnsView *self)
     self->syncing_selection = FALSE;
 
     /* Something outside the view picked an item: follow it, so that hovering a
-     * folder while dragging opens it, as it does in the other views. */
-    if (self->columns->len != 0)
+     * folder while dragging opens it, as it does in the other views.
+     *
+     * Which column to follow has to come from where the selection landed, not
+     * from the column last clicked in: a drag never clicks anything. */
+    column = NULL;
+    for (guint i = 0; i < self->columns->len; i++)
     {
-        active = get_active_column_index (self);
-        column = g_ptr_array_index (self->columns, active);
+        Column *candidate = g_ptr_array_index (self->columns, i);
+        g_autoptr (GtkBitset) selection = NULL;
+
+        if (candidate->is_preview)
+        {
+            continue;
+        }
+
+        selection = gtk_selection_model_get_selection (GTK_SELECTION_MODEL (candidate->selection));
+        if (!gtk_bitset_is_empty (selection))
+        {
+            column = candidate;
+            active = i;
+        }
+    }
+
+    if (column != NULL)
+    {
+        self->active_column = active;
         update_child_column (self, column);
     }
 }
@@ -804,65 +835,117 @@ get_column_width (NautilusColumnsView *self)
 }
 
 static void
-apply_column_width (NautilusColumnsView *self,
-                    int                  width)
+set_column_width (Column *column,
+                  int     width)
 {
-    for (guint i = 0; i < self->columns->len; i++)
+    column->width = width;
+    gtk_widget_set_size_request (column->scrolled_window, width, -1);
+}
+
+/* The column a handle resizes: the one on its left. @column is the one the
+ * handle was created for, which sits on its right. */
+static Column *
+get_resized_column (Column *column)
+{
+    NautilusColumnsView *self = column->view;
+    guint index = column_index (self, column);
+
+    g_return_val_if_fail (index > 0, NULL);
+
+    return g_ptr_array_index (self->columns, index - 1);
+}
+
+/* Where the pointer is now, in the coordinates of the view as a whole. */
+static gboolean
+get_pointer_x (GtkGesture *gesture,
+               Column     *column,
+               double      x,
+               double      y,
+               double     *out_x)
+{
+    GtkWidget *handle = gtk_event_controller_get_widget (GTK_EVENT_CONTROLLER (gesture));
+    graphene_point_t point;
+
+    if (!gtk_widget_compute_point (handle, GTK_WIDGET (column->view),
+                                   &GRAPHENE_POINT_INIT ((float) x, (float) y),
+                                   &point))
     {
-        Column *column = g_ptr_array_index (self->columns, i);
-
-        gtk_widget_set_size_request (column->scrolled_window, width, -1);
+        return FALSE;
     }
+
+    *out_x = point.x;
+    return TRUE;
 }
 
 static void
-on_column_width_changed (NautilusColumnsView *self)
+on_divider_drag_begin (GtkGestureDrag *gesture,
+                       double          start_x,
+                       double          start_y,
+                       gpointer        user_data)
 {
-    apply_column_width (self, get_column_width (self));
-}
+    Column *column = user_data;
+    NautilusColumnsView *self = column->view;
+    Column *resized = get_resized_column (column);
 
-static void
-on_divider_drag_begin (GtkGestureDrag      *gesture,
-                       double               start_x,
-                       double               start_y,
-                       NautilusColumnsView *self)
-{
-    self->drag_start_width = get_column_width (self);
-    self->dragged_width = self->drag_start_width;
+    if (resized == NULL ||
+        !get_pointer_x (GTK_GESTURE (gesture), column, start_x, start_y, &self->drag_origin_x))
+    {
+        return;
+    }
+
+    self->drag_start_width = resized->width;
+    self->dragged_width = resized->width;
+    self->drag_start_x = start_x;
+    self->drag_start_y = start_y;
 
     gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_CLAIMED);
 }
 
 static void
-on_divider_drag_update (GtkGestureDrag      *gesture,
-                        double               offset_x,
-                        double               offset_y,
-                        NautilusColumnsView *self)
+on_divider_drag_update (GtkGestureDrag *gesture,
+                        double          offset_x,
+                        double          offset_y,
+                        gpointer        user_data)
 {
-    /* Every column keeps the same width, as Finder does unless told otherwise,
-     * so that the layout stays predictable while drilling down. */
-    self->dragged_width = CLAMP (self->drag_start_width + (int) offset_x,
+    Column *column = user_data;
+    NautilusColumnsView *self = column->view;
+    Column *resized = get_resized_column (column);
+    double pointer_x;
+
+    if (resized == NULL ||
+        !get_pointer_x (GTK_GESTURE (gesture), column,
+                        self->drag_start_x + offset_x,
+                        self->drag_start_y + offset_y,
+                        &pointer_x))
+    {
+        return;
+    }
+
+    self->dragged_width = CLAMP (self->drag_start_width + (int) (pointer_x - self->drag_origin_x),
                                  COLUMN_WIDTH_MIN, COLUMN_WIDTH_MAX);
 
-    apply_column_width (self, self->dragged_width);
+    set_column_width (resized, self->dragged_width);
 }
 
 static void
-on_divider_drag_end (GtkGestureDrag      *gesture,
-                     double               offset_x,
-                     double               offset_y,
-                     NautilusColumnsView *self)
+on_divider_drag_end (GtkGestureDrag *gesture,
+                     double          offset_x,
+                     double          offset_y,
+                     gpointer        user_data)
 {
+    Column *column = user_data;
+
+    /* Remember it as the width to give columns opened from now on. */
     g_settings_set_int (nautilus_columns_view_preferences, "column-width",
-                        self->dragged_width);
+                        column->view->dragged_width);
 }
 
 static void
-on_divider_pressed (GtkGestureClick     *gesture,
-                    int                  n_press,
-                    double               x,
-                    double               y,
-                    NautilusColumnsView *self)
+on_divider_pressed (GtkGestureClick *gesture,
+                    int              n_press,
+                    double           x,
+                    double           y,
+                    gpointer         user_data)
 {
     /* Take the press for ourselves. Otherwise it reaches the view's background
      * handler, which clears the selection on every click. */
@@ -870,7 +953,7 @@ on_divider_pressed (GtkGestureClick     *gesture,
 }
 
 static GtkWidget *
-create_divider (NautilusColumnsView *self)
+create_divider (Column *column)
 {
     GtkWidget *divider = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
     GtkWidget *line = gtk_separator_new (GTK_ORIENTATION_VERTICAL);
@@ -889,14 +972,14 @@ create_divider (NautilusColumnsView *self)
     gtk_widget_set_cursor_from_name (divider, "col-resize");
 
     drag = gtk_gesture_drag_new ();
-    g_signal_connect (drag, "drag-begin", G_CALLBACK (on_divider_drag_begin), self);
-    g_signal_connect (drag, "drag-update", G_CALLBACK (on_divider_drag_update), self);
-    g_signal_connect (drag, "drag-end", G_CALLBACK (on_divider_drag_end), self);
+    g_signal_connect (drag, "drag-begin", G_CALLBACK (on_divider_drag_begin), column);
+    g_signal_connect (drag, "drag-update", G_CALLBACK (on_divider_drag_update), column);
+    g_signal_connect (drag, "drag-end", G_CALLBACK (on_divider_drag_end), column);
     gtk_widget_add_controller (divider, GTK_EVENT_CONTROLLER (drag));
 
     click = gtk_gesture_click_new ();
     gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click), GDK_BUTTON_PRIMARY);
-    g_signal_connect (click, "pressed", G_CALLBACK (on_divider_pressed), self);
+    g_signal_connect (click, "pressed", G_CALLBACK (on_divider_pressed), column);
     gtk_widget_add_controller (divider, GTK_EVENT_CONTROLLER (click));
 
     /* Grouped, so that claiming the press in the click gesture does not cancel
@@ -912,13 +995,15 @@ static void
 append_column (NautilusColumnsView *self,
                Column              *column)
 {
-    gtk_widget_set_size_request (column->scrolled_window, get_column_width (self), -1);
+    set_column_width (column, get_column_width (self));
     gtk_widget_set_vexpand (column->scrolled_window, TRUE);
     gtk_widget_set_hexpand (column->scrolled_window, FALSE);
 
     if (self->columns->len > 0)
     {
-        column->divider = create_divider (self);
+        /* The handle looks up which column it resizes only once dragged, by
+         * which time this column is in the array. */
+        column->divider = create_divider (column);
         gtk_box_append (GTK_BOX (self->columns_box), column->divider);
     }
 
@@ -1552,11 +1637,6 @@ nautilus_columns_view_init (NautilusColumnsView *self)
     g_signal_connect_object (gtk_filechooser_preferences,
                              "changed::" NAUTILUS_PREFERENCES_SORT_DIRECTORIES_FIRST,
                              G_CALLBACK (update_sort_directories_first),
-                             self,
-                             G_CONNECT_SWAPPED);
-    g_signal_connect_object (nautilus_columns_view_preferences,
-                             "changed::column-width",
-                             G_CALLBACK (on_column_width_changed),
                              self,
                              G_CONNECT_SWAPPED);
     g_signal_connect_object (nautilus_columns_view_preferences,
